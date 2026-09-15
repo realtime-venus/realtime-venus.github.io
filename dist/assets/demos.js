@@ -71,9 +71,9 @@ window.VENUS_DEMOS = [
     marks:[{time:5,label:'Realtime-Venus speaks'},{time:13,label:'You interrupt'},{time:15,label:'The response adapts'}],
     events:[
       {time:1,end:5,role:'You',text:'Help me plan a three-day road trip with safe pacing.'},
-      {time:5,end:13,role:'Realtime-Venus',text:'Aim for 5–7 driving hours daily, take a break every two hours, plus lunch and an…',interrupted:true},
+      {time:5,end:13,role:'Realtime-Venus',text:"Got it. I'll plan a three-day road trip, with daily limits and stops. I'll also include meals and...",interrupted:true},
       {time:13,end:15,role:'You',text:'What should each day look like for breaks and meals?',kind:'interruption'},
-      {time:15,end:30,role:'Realtime-Venus',text:'Start after breakfast, drive two hours, then take a short break. Drive two more hours, stop for lunch, and continue one to three hours before dinner and overnight rest.'}
+      {time:15,end:30,role:'Realtime-Venus',text:"Start with a breakfast rich in protein and fiber. Then, eat balanced lunches and dinners with vegetables, lean proteins, and whole grains."}
     ],
     note:'The initial response is truncated in the original figure. Event times illustrate the conversational sequence and are not response-latency measurements.'
   }
