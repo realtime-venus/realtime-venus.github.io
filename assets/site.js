@@ -184,7 +184,11 @@
     });
     chapters.append(ui.next); controls.append(chapters);
     const details = node('details', 'scene-transcript');
-    details.append(node('summary', '', 'Read the full transcript'), makeTranscript(false));
+    const summary = node('summary', 'disclosure-summary');
+    const action = node('span', 'disclosure-action'); action.setAttribute('aria-hidden', 'true');
+    action.append(node('span', 'disclosure-expand', 'Expand'), node('span', 'disclosure-collapse', 'Collapse'), node('span', 'disclosure-icon'));
+    summary.append(node('span', 'disclosure-copy', 'Read the full transcript'), action);
+    details.append(summary, makeTranscript(false));
     controls.append(details, node('p', 'playback-note', current.note));
     update();
   }
