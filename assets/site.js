@@ -116,11 +116,11 @@
     const list = node('ol', interactive ? 'walkthrough-transcript scene-chat' : 'walkthrough-transcript');
     list.setAttribute('aria-label', interactive ? 'Conversation at this point in the scene' : 'Full paper example transcript');
     current.events.forEach(event => {
-      const item = node('li', 'transcript-item' + (event.role === 'Venus' ? ' from-venus' : '') + (event.kind ? ' ' + event.kind : ''));
+      const item = node('li', 'transcript-item' + (event.role === 'Realtime-Venus' ? ' from-venus' : '') + (event.kind ? ' ' + event.kind : ''));
       const head = node('div', 'transcript-head');
       head.append(node('strong', '', event.role), node('span', '', timestamp(event.time)));
       item.append(head, node('p', '', event.text));
-      if (event.interrupted) item.append(node('span', 'transcript-note', 'Interrupted · Venus yields to your follow-up'));
+      if (event.interrupted) item.append(node('span', 'transcript-note', 'Interrupted · Realtime-Venus yields to your follow-up'));
       list.append(item);
     });
     return list;
@@ -148,7 +148,7 @@
     const channelBox = node('div', 'scene-channels');
     channelBox.setAttribute('aria-label', 'Illustrated model activity');
     ui.channels = {};
-    [['listen', 'Listen', 'Input stream'], ['speak', 'Speak', 'Venus response'], ['delegate', 'Delegate', 'Background task']].forEach(([key, title, subtitle]) => {
+    [['listen', 'Listen', 'Input stream'], ['speak', 'Speak', 'Realtime-Venus response'], ['delegate', 'Delegate', 'Background task']].forEach(([key, title, subtitle]) => {
       const channel = node('div', 'scene-channel ' + key);
       const row = node('div', 'channel-heading'); row.append(node('strong', '', title), node('span', 'channel-state', 'Idle'));
       const meter = node('div', 'channel-meter'); meter.setAttribute('aria-hidden', 'true'); meter.append(node('span'));
