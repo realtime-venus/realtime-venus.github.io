@@ -2,11 +2,11 @@
 // The supplied examples are explicitly presented as manuscript walkthroughs.
 window.VENUS_DEMOS = [
   {
-    id: 'proactive', type: 'walkthrough', model: 'Venus-Realtime-Omni',
+    id: 'proactive', type: 'walkthrough', model: 'Realtime-Venus-Omni',
     category: 'Proactive perception', title: 'Notice the moment that matters',
     summary: 'Venus keeps watching and listening after the request, then responds when the relevant event happens.',
     source: 'Illustrated from Figure 4. No recorded model audio or video. Timeline markers come from the paper.',
-    figure: './assets/proactive-example.png', filmstrip: './assets/proactive-filmstrip.jpg',
+    figure: './assets/proactive-example.png?v=7', filmstrip: './assets/proactive-filmstrip.jpg',
     filmstripAlt: 'Original football-match frames from the manuscript example.',
     duration: 20, input: 'Audio + video input', filmstripDuration: 40,
     opening: 'You are watching a football match. Ask Venus to catch the opening whistle.',
@@ -25,11 +25,11 @@ window.VENUS_DEMOS = [
     note: 'The figure marks the reminder at 16 s; it does not report its speech duration. The walkthrough ends at 20 s for presentation.'
   },
   {
-    id:'delegation', type:'walkthrough', model:'Venus-Realtime-Omni',
+    id:'delegation', type:'walkthrough', model:'Realtime-Venus-Omni',
     category:'Asynchronous delegation',title:'Get answers while life keeps moving',
     summary:'The frontend acknowledges a request while the harness looks up external information. The audio–visual stream continues throughout.',
     source:'Illustrated from Figure 4. English translation of the paper’s Chinese dialogue; the traffic information belongs to that example.',
-    figure:'./assets/delegation-example.png',filmstrip:'./assets/delegation-filmstrip.jpg',
+    figure:'./assets/delegation-example.png?v=7',filmstrip:'./assets/delegation-filmstrip.jpg',
     filmstripAlt:'Original driving-scene frames from the manuscript example.',
     duration:22,input:'Audio + video input',filmstripDuration:40,
     opening:'You are on the road. Ask Venus to check the day’s driving restrictions.',
@@ -39,7 +39,7 @@ window.VENUS_DEMOS = [
       {time:3,title:'You ask. Venus listens.',detail:'A question needs information from an external service.',channels:['listen']},
       {time:8,title:'Acknowledge the request',detail:'A short reply keeps the conversation moving.',channels:['listen','speak']},
       {time:10,title:'The lookup runs. Input stays active.',detail:'The harness works in parallel with the interaction loop.',channels:['listen','delegate'],accent:'delegation'},
-      {time:15,title:'The answer rejoins the conversation',detail:'The returned information is delivered as a spoken response.',channels:['listen','speak'],accent:'response'}
+      {time:15,title:'The answer rejoins the conversation',detail:'The harness prepares a reply; the frontend brings it into the conversation.',channels:['listen','speak'],accent:'response'}
     ],
     marks:[{time:3,label:'Ask a question'},{time:10,label:'Delegate the lookup'},{time:15,label:'Bring the answer back'}],
     events:[
@@ -51,11 +51,11 @@ window.VENUS_DEMOS = [
     note:'Traffic information is quoted from the paper example, not current guidance. The five-second query interval is an example timeline, not a latency benchmark.'
   },
   {
-    id:'interruption',type:'walkthrough',model:'Venus-Realtime-Audio',
+    id:'interruption',type:'walkthrough',model:'Realtime-Venus-Audio',
     category:'Full-duplex conversation',title:'Change direction mid-conversation',
     summary:'Venus listens during its own response, yields to the follow-up, and answers the revised question.',
     source:'Illustrated from Figure 4. Original English dialogue; no recorded speech or live model connection.',
-    figure:'./assets/interruption-example.png',duration:30,input:'Audio input',
+    figure:'./assets/interruption-example.png?v=7',duration:30,input:'Audio input',
     opening:'You are planning a road trip. Start with a request, then change direction while Venus speaks.',
     spotlight:{time:13,label:'See the interruption'},
     phases:[
