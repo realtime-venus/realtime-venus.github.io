@@ -15,7 +15,8 @@
     }
   });
 
-  const demos = window.VENUS_DEMOS || [];
+  const demoOrder = ['interruption', 'proactive', 'delegation'];
+  const demos = [...(window.VENUS_DEMOS || [])].sort((a, b) => demoOrder.indexOf(a.id) - demoOrder.indexOf(b.id));
   const tabs = Array.from(document.querySelectorAll('.demo-tab'));
   const panel = document.getElementById('demo-panel');
   const media = document.getElementById('demo-media');
@@ -158,7 +159,7 @@
     ui.viewport = node('div', 'scene-conversation');
     ui.viewport.tabIndex = 0; ui.viewport.setAttribute('role', 'region'); ui.viewport.setAttribute('aria-label', 'Scene conversation. Scroll to review earlier messages.');
     ui.empty = node('div', 'scene-opening');
-    ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening), button('scene-start', '▶ Play this scene', () => start()), node('small', '', 'Animated paper example · no recorded audio'));
+    ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening), button('scene-start', '▶ Play this scene', () => start()));
     ui.chat = makeTranscript(true); ui.viewport.append(ui.empty, ui.chat); stage.append(ui.viewport);
     media.append(stage);
 
@@ -178,7 +179,8 @@
     });
     ui.next = button('scene-next', 'Next scene →', () => {
       const index = demos.findIndex(demo => demo.id === current.id);
-      select(demos[(index + 1) % demos.length].id, true);
+      select(demos[(index + 1) % demos.length].id);
+      panel.focus({preventScroll: true});
     });
     chapters.append(ui.next); controls.append(chapters);
     const details = node('details', 'scene-transcript');
@@ -206,10 +208,11 @@
     tabs.forEach(tab => { const active = tab.dataset.demo === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; if (active && focus) tab.focus(); });
     panel.setAttribute('aria-labelledby', 'tab-' + id);
     document.getElementById('demo-model').textContent = current.model;
-    document.getElementById('demo-format').textContent = current.type === 'video' ? 'Recorded demo' : 'Animated paper example · no recorded audio';
+    document.getElementById('demo-format').textContent = current.type === 'video' ? 'Recorded demo' : 'Animated research example';
     document.getElementById('demo-category').textContent = current.category;
     document.getElementById('demo-title').textContent = current.title;
     document.getElementById('demo-summary').textContent = current.summary;
+    document.getElementById('demo-takeaway').textContent = current.takeaway || current.summary;
     document.getElementById('demo-source').textContent = current.source;
     const figureLink = document.getElementById('demo-figure-link'); figureLink.hidden = !current.figure;
     if (current.figure) figureLink.href = current.figure;
@@ -219,7 +222,11 @@
   }
   spotlight.addEventListener('click', () => start(Math.max(0, current.spotlight.time - 2)));
   tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => select(tab.dataset.demo));
+    tab.addEventListener('click', () => {
+      select(tab.dataset.demo);
+      panel.scrollIntoView?.({behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start'});
+      panel.focus({preventScroll: true});
+    });
     tab.addEventListener('keydown', event => {
       let next;
       if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
@@ -229,7 +236,9 @@
       if (next !== undefined) { event.preventDefault(); select(tabs[next].dataset.demo, true); }
     });
   });
-  document.querySelector('.hero-example').addEventListener('click', () => select('interruption'));
+  document.querySelectorAll('[data-open-demo]').forEach(link => {
+    link.addEventListener('click', () => select(link.dataset.openDemo));
+  });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { stop(); if (current?.type === 'walkthrough') update(); media.querySelector('video')?.pause(); }
   });

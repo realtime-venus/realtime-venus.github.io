@@ -10,7 +10,7 @@ A demo-led presentation of proactive audio–visual interaction, full-duplex spe
 
 The method explains how the harness prepares a delegated reply and the frontend chooses speech timing, with the revised harness diagram and a concise description of the shared post-training recipe.
 
-The reading order is overview → demos → results → method → paper. Navigation follows that order; architecture and detailed benchmarks expand on demand.
+The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation and its source figure. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
 
 The walkthroughs are **illustrations reconstructed from Figure 4**, not real model recordings or a live service. All dialogue and scores come from the September 9, 2026 manuscript, using the revised Realtime-Venus report supplied on September 15, 2026. The displayed report date remains the date printed in the manuscript. The delegation transcript is translated from Chinese and its example traffic information is not current guidance.
 
@@ -59,11 +59,15 @@ Edit `dist/assets/demos.js`. For an existing scene, set `type` to `video` and ad
 
 ## Typography and editorial style
 
-The interface uses white, pale blue-gray and brand-tinted surfaces. The `#1677FF` brand accent follows the [official Ant Design color specification](https://ant-design.antgroup.com/docs/spec/colors-cn); its darker `#0958D9` shade keeps small links and button labels readable. Brand blue unifies the hero, demo selection, activity indicators and metrics. Channel labels distinguish listening, speech and delegation; interruption notes use a restrained text accent. Demo controls share the same column as the scene, and the four headline metrics form one consistent grid.
+The interface uses white, pale blue-gray and brand-tinted surfaces. The `#1677FF` brand accent follows the [official Ant Design color specification](https://ant-design.antgroup.com/docs/spec/colors-cn); its darker `#0958D9` shade keeps small links and button labels readable. Brand blue unifies the centered hero, scene-card selection, activity indicators and metrics. White space, compact pill buttons and larger headings distinguish introduction, examples and evidence. Channel labels distinguish listening, speech and delegation; interruption notes use a restrained text accent. Demo controls share the same column as the scene. A broad 6-of-8 comparison sits above three capability-focused metric cards.
 
 Inter is bundled from the [official Inter distribution](https://rsms.me/inter/) with its SIL Open Font License in `dist/assets/fonts/OFL.txt`. It is served locally; visitors do not need to contact an external font provider. The layout uses 400, 500 and 600 weights, a 16 px body size, and a 13 px minimum for supporting labels. Heading sizes adapt to viewport width. Code uses a system monospace face; metrics and timestamps use tabular numerals.
 
 Use sentence case for headings and interface labels. Preserve official names (`Realtime-Venus-Omni`, `Realtime-Venus-Audio`, `Realtime-Venus-Harness`), benchmark names and acronyms. Use `BibTeX`, `Figure 4` and `13 s` rather than all-caps labels or zero-padded figure numbers. Keep dynamic demo labels consistent with the initial HTML.
+
+## Presentation references
+
+The information design draws on the English [SeedRealtime page](https://seed.bytedance.com/en/SeedRealtime) and [GPT-Live introduction](https://openai.com/index/introducing-gpt-live/): spacious introductions, concrete situations next to their examples, and a clear path from behavior to mechanism and evidence. All product copy, demonstrations, figures and scores remain grounded in the Realtime-Venus report; no reference-site media or product claims are reused.
 
 ## Deployment
 
