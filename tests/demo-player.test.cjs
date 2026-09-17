@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const {parseHTML} = require('linkedom');
 const root = path.join(__dirname, '..');
 
-function setup({saveData = false, effectiveType = '4g', aac = true} = {}) {
+function setup({saveData = false, effectiveType = '4g', aac = true, hostname = 'localhost'} = {}) {
   const {document, window: dom} = parseHTML(fs.readFileSync(path.join(root, 'dist/index.html'), 'utf8'));
   const fire = (el, type) => el.dispatchEvent(new dom.Event(type));
   const create = document.createElement.bind(document), players = [], frames = new Map();
@@ -37,6 +37,7 @@ function setup({saveData = false, effectiveType = '4g', aac = true} = {}) {
     return el;
   };
   const window = {
+    location: {hostname},
     matchMedia: () => ({matches: false}),
     IntersectionObserver: class {
       constructor(callback) {observer = callback;}
@@ -44,7 +45,7 @@ function setup({saveData = false, effectiveType = '4g', aac = true} = {}) {
       disconnect() {}
     }
   };
-  const context = vm.createContext({window, document, navigator: {connection: {saveData, effectiveType}},
+  const context = vm.createContext({window, document, URL, navigator: {connection: {saveData, effectiveType}},
     requestAnimationFrame: callback => {frames.set(++serial, callback); return serial;},
     cancelAnimationFrame: id => frames.delete(id)});
   for (const file of ['demos.js', 'demo-engine.js', 'site.js']) vm.runInContext(fs.readFileSync(path.join(root, 'dist/assets', file), 'utf8'), context);
@@ -192,4 +193,15 @@ test('An error during seeking clears busy state and cancels any queued scrub res
   assert.equal(p.$('.media-error').hidden, false); assert.equal(p.frames.size, 0);
   assert.notEqual(p.$('.scene-status').textContent, 'Seeking…');
   p.$('.walkthrough-play').click(); assert.equal(audio.error, null, 'One click retries the failed load');
+});
+
+
+test('The Sites mirror uses the verified range-capable media origin with CORS captions', () => {
+  const p = setup({hostname: 'venus-realtime.huoge2006.chatgpt.site'});
+  assert.equal(p.players[0].src, 'https://realtime-venus.github.io/assets/demos/road-trip.m4a');
+  assert.equal(p.players[0].crossOrigin, 'anonymous');
+  p.$('#tab-proactive').click();
+  assert.equal(p.$('video').src, 'https://realtime-venus.github.io/assets/demos/microwave.mp4?v=23');
+  assert.equal(p.$('track').src, 'https://realtime-venus.github.io/assets/demos/microwave.en.vtt');
+  assert.equal(setup({hostname: 'realtime-venus.github.io'}).players[0].src, './assets/demos/road-trip.m4a');
 });
