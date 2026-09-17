@@ -540,3 +540,10 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
   .demo-panel-heading { align-items: flex-start; flex-direction: column; padding-block: .65rem; }
   .demo-panel-heading .scene-spotlight { max-width: 100%; }
 }
+
+/* Loading feedback stays within the existing playback status. */
+.demo-panel[data-loading="true"] .scene-status::before { width: 10px; height: 10px; border: 2px solid var(--blue-line); border-top-color: var(--accent); border-radius: 50%; background: transparent; box-shadow: none; animation: media-loading .8s linear infinite; }
+@keyframes media-loading { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .demo-panel[data-loading="true"] .scene-status::before { animation: none; }
+}
