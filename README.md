@@ -46,7 +46,7 @@ Edit `dist/assets/demos.js`. For an existing scene, set `type` to `audio` or `vi
 }
 ```
 
-`poster`, `captions` and `language` are optional. Use owned or authorized footage and captions. Never add API keys or credentials to the static website. The manuscript provides no public Venus model/code download URL, so none has been invented.
+`poster`, `captions` and `language` are optional. Use owned or authorized footage and captions. Never add API keys or credentials to the static website. The introduction links to the user-supplied Realtime-Venus repositories on GitHub, Hugging Face, and ModelScope.
 
 ## Files
 
