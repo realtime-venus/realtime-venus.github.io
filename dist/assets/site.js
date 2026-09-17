@@ -96,10 +96,6 @@
     panel.dataset.complete = String(state.complete);
     ui.play.textContent = state.complete ? '↻ Replay scene' : playing ? 'Ⅱ Pause scene' : '▶ Play scene';
     ui.play.setAttribute('aria-pressed', String(playing));
-    if (ui.audioPlay) {
-      ui.audioPlay.textContent = state.complete ? '↻ Replay' : playing ? 'Ⅱ Pause' : '▶ Listen';
-      ui.audioPlay.setAttribute('aria-pressed', String(playing));
-    }
     ui.status.textContent = state.complete ? 'Complete' : ui.buffering && playing ? 'Loading recording…' : playing ? 'Playing' : time === 0 ? 'Ready to play' : 'Paused';
     ui.counter.textContent = `${state.phaseIndex + 1} / ${current.phases.length}`;
     ui.scrubber.value = String(time);
@@ -220,7 +216,7 @@
     ui.viewport.tabIndex = 0;
     ui.empty = node('div', 'scene-opening');
     ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening));
-    if (!isVideo) ui.empty.append(button('scene-start', '▶ Play this scene', () => start()));
+    if (!isRecorded) ui.empty.append(button('scene-start', '▶ Play this scene', () => start()));
     ui.chat = makeTranscript(true); ui.viewport.append(ui.empty, ui.chat); dialogue.append(ui.viewport);
     main.append(controls);
     media.append(stage);
@@ -259,10 +255,6 @@
     const label = node('div', 'scene-film-label');
     label.append(node('span', '', current.mediaLabel || (isVideo ? 'Recorded scene' : 'Recorded stereo conversation')));
     if (isVideo) label.append(node('span', '', 'Audio + video'));
-    else {
-      ui.audioPlay = button('scene-start scene-audio-play', '▶ Listen', toggle);
-      label.append(ui.audioPlay);
-    }
     const player = node(isVideo ? 'video' : 'audio', isVideo ? 'recorded-demo' : 'recorded-audio');
     ui.recording = player; ui.pendingSeek = null; ui.buffering = false; ui.playRequest = 0;
     player.controls = false; player.playsInline = true; player.preload = 'metadata'; player.src = current.src;
