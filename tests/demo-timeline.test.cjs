@@ -8,23 +8,28 @@ for (const file of ['demos.js','demo-engine.js']) vm.runInContext(fs.readFileSyn
 const scenes = Object.fromEntries(context.window.VENUS_DEMOS.map(scene => [scene.id,scene]));
 const frame = (id,t) => JSON.parse(JSON.stringify(context.window.VenusScene.frame(scenes[id],t)));
 
-test('The recorded microwave reply and captions use playback timestamps', () => {
+test('The microwave dialogue includes the spoken request and the logged model reply', () => {
   const recording=scenes.proactive;
   assert.equal(recording.type,'video');
   assert.equal(recording.duration,45);
-  assert.equal(recording.events.length,1);
-  assert.equal(recording.events[0].time,30);
-  assert.equal(recording.events[0].end,34.28);
-  assert.equal(recording.events[0].text,'The microwave just beeped — the heating cycle is complete.');
-  for (const key of ['src','poster','captions']) assert.ok(fs.existsSync(path.join(__dirname,'../dist',recording[key])));
-  const captions=fs.readFileSync(path.join(__dirname,'../dist',recording.captions),'utf8');
+  assert.equal(recording.events.length,2);
+  const [request,reply]=recording.events;
+  assert.equal(request.role,'You');
+  assert.ok(request.time >= 1.7 && request.time <= 2.1);
+  assert.ok(request.end >= 4.5 && request.end <= 4.9);
+  assert.match(request.text,/Let me know when the microwave beeps/);
+  assert.equal(reply.time,30);
+  assert.equal(reply.end,34.28);
+  assert.equal(reply.text,'The microwave just beeped — the heating cycle is complete.');
+  for (const key of ['src','poster','captions']) assert.ok(fs.existsSync(path.join(__dirname,'../dist',recording[key].split('?')[0])));
+  const captions=fs.readFileSync(path.join(__dirname,'../dist',recording.captions.split('?')[0]),'utf8');
   assert.ok(captions.includes('00:00:30.000 --> 00:00:34.280'));
-  assert.ok(captions.includes(recording.events[0].text));
+  for (const event of recording.events) assert.ok(captions.includes(`${event.role}: ${event.text}`));
 });
 test('The flight-search scene follows the complete dialogue clips and delegation interval', () => {
   const recording=scenes.delegation;
   assert.equal(recording.type,'video');assert.equal(recording.duration,35.28);
-  for (const key of ['src','poster','captions']) assert.ok(fs.existsSync(path.join(__dirname,'../dist',recording[key])));
+  for (const key of ['src','poster','captions']) assert.ok(fs.existsSync(path.join(__dirname,'../dist',recording[key].split('?')[0])));
   assert.deepEqual(frame('delegation',3.99).visible,[]);
   assert.deepEqual(frame('delegation',4).active,[0]);
   assert.deepEqual(frame('delegation',10).channels,['listen','speak']);
@@ -35,18 +40,22 @@ test('The flight-search scene follows the complete dialogue clips and delegation
   assert.deepEqual(frame('delegation',24).active,[3]);
   assert.deepEqual(frame('delegation',33.8).active,[3],'Preserve the full final reply beyond the old 32 s storyboard endpoint');
   assert.deepEqual(frame('delegation',33.93).active,[]);
-  const captions=fs.readFileSync(path.join(__dirname,'../dist',recording.captions),'utf8');
+  const captions=fs.readFileSync(path.join(__dirname,'../dist',recording.captions.split('?')[0]),'utf8');
   assert.ok(captions.includes('00:00:24.000 --> 00:00:33.927'));
   assert.ok(captions.includes(recording.events[3].text));
   assert.ok(!captions.includes('Harness:'),'Background instructions are not spoken subtitles');
 });
-test('The recorded scene reveals its reply only during the playback interval and rewinds cleanly', () => {
-  assert.deepEqual(frame('proactive',29.99).visible,[]);
+test('The recorded scene reveals both speakers on cue and rewinds cleanly', () => {
+  const request=scenes.proactive.events[0];
+  assert.deepEqual(frame('proactive',request.time-0.01).visible,[]);
+  assert.deepEqual(frame('proactive',request.time).active,[0]);
+  assert.deepEqual(frame('proactive',request.end).active,[]);
+  assert.deepEqual(frame('proactive',29.99).visible,[0]);
   assert.deepEqual(frame('proactive',30).channels,['listen','speak']);
-  assert.deepEqual(frame('proactive',30).active,[0]);
+  assert.deepEqual(frame('proactive',30).active,[1]);
   assert.deepEqual(frame('proactive',34.28).channels,['listen']);
   assert.deepEqual(frame('proactive',34.28).active,[]);
-  assert.deepEqual(frame('proactive',34.28).visible,[0]);
+  assert.deepEqual(frame('proactive',34.28).visible,[0,1]);
   assert.equal(frame('proactive',45).complete,true);
   assert.deepEqual(frame('proactive',45).channels,[]);
   assert.deepEqual(frame('proactive',0).visible,[]);

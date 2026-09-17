@@ -8,12 +8,13 @@ window.VENUS_DEMOS = [
     "category": "Proactive audio–visual perception",
     "title": "The microwave beeps. Realtime-Venus responds.",
     "takeaway": "At 30 s, Realtime-Venus identifies the microwave’s beep and explains that the heating cycle is complete.",
-    "summary": "Watch Realtime-Venus respond when the microwave finishes heating.",
-    "source": "Recorded video · Synchronized transcript.",
+    "summary": "Ask Realtime-Venus to listen for the microwave, then watch it respond when heating finishes.",
+    "source": "Recorded video · Synchronized dialogue.",
     "src": "./assets/demos/microwave.mp4",
     "playbackSrc": "./assets/demos/microwave.mp4?v=23",
     "poster": "./assets/demos/microwave-poster.jpg",
-    "captions": "./assets/demos/microwave.en.vtt",
+    "captions": "./assets/demos/microwave.en.vtt?v=25",
+    "captionLabel": "English dialogue",
     "language": "en",
     "duration": 45,
     "width": 960,
@@ -23,14 +24,22 @@ window.VENUS_DEMOS = [
       "time": 30,
       "label": "Watch the response"
     },
-    "opening": "Watch the microwave scene, then hear the response at 30 s.",
+    "opening": "You ask Realtime-Venus to let you know when the microwave beeps.",
     "phases": [
-      {"time": 0, "title": "Watch and listen", "detail": "The microwave runs while Realtime-Venus watches and listens.", "channels": ["listen"]},
+      {"time": 0, "title": "You set the task", "detail": "You ask to be notified when the microwave beeps.", "channels": ["listen"]},
+      {"time": 4.64, "title": "Listening for the beep", "detail": "The microwave runs while Realtime-Venus watches and listens.", "channels": ["listen"]},
       {"time": 30, "title": "Realtime-Venus responds", "detail": "Realtime-Venus identifies the beep and explains what it means.", "channels": ["listen", "speak"], "accent": "response"},
       {"time": 34.28, "title": "The reply finishes", "detail": "The recording continues after Realtime-Venus finishes speaking.", "channels": ["listen"]}
     ],
-    "marks": [{"time": 0, "label": "Watch the scene"}, {"time": 30, "label": "The response begins"}, {"time": 34.28, "label": "After the response"}],
+    "marks": [{"time": 0, "label": "Hear the request"}, {"time": 30, "label": "The response begins"}, {"time": 34.28, "label": "After the response"}],
     "events": [
+      {
+        "time": 1.74,
+        "end": 4.64,
+        "role": "You",
+        "text": "Let me know when the microwave beeps the signal is done.",
+        "note": "Automatic transcription"
+      },
       {
         "time": 30,
         "end": 34.28,
@@ -38,7 +47,7 @@ window.VENUS_DEMOS = [
         "text": "The microwave just beeped — the heating cycle is complete."
       }
     ],
-    "note": "Activity indicators guide playback. The transcript is synchronized with the recording."
+    "note": "The opening request is automatically transcribed from the video; words near the end are less clear. Its timing is approximate. The model reply follows the supplied transcript and recorded playback interval. Activity indicators guide playback."
   },
   {
     "id": "delegation",

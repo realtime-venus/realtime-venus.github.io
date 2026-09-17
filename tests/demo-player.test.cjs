@@ -145,7 +145,6 @@ test('Buffering stops animation until media can play, and hiding the page cancel
   assert.equal(p.frames.size, 0); assert.equal(audio.paused, true);
 });
 
-
 test('Inactive seek completion is reconciled when returning, and queued play/pause events obey native state', () => {
   const p = setup(), audio = p.players[0]; p.ready(audio);
   const slider = p.$('.timeline-slider'); slider.value = '11'; p.fire(slider, 'input'); p.fire(slider, 'change');
@@ -202,6 +201,21 @@ test('The Sites mirror uses the verified range-capable media origin with CORS ca
   assert.equal(p.players[0].crossOrigin, 'anonymous');
   p.$('#tab-proactive').click();
   assert.equal(p.$('video').src, 'https://realtime-venus.github.io/assets/demos/microwave.mp4?v=23');
-  assert.equal(p.$('track').src, 'https://realtime-venus.github.io/assets/demos/microwave.en.vtt');
+  assert.equal(p.$('track').src, 'https://realtime-venus.github.io/assets/demos/microwave.en.vtt?v=25');
   assert.equal(setup({hostname: 'realtime-venus.github.io'}).players[0].src, './assets/demos/road-trip.m4a');
+});
+
+test('Microwave speech appears with playback, stays in the full transcript and rewinds correctly', () => {
+  const p = setup(); p.$('#tab-proactive').click();
+  const video = p.$('video'); p.ready(video);
+  assert.equal(p.visible(), 0);
+  assert.equal(p.all('.scene-transcript .transcript-item').length, 2);
+  video.clock(3);
+  assert.equal(p.visible(), 1);
+  assert.match(p.$('.scene-chat .transcript-item').textContent, /Let me know when the microwave beeps/);
+  video.clock(29.99); assert.equal(p.visible(), 1);
+  video.clock(30); assert.equal(p.visible(), 2);
+  assert.match(p.$('.scene-chat [aria-current="step"]').textContent, /heating cycle is complete/);
+  video.clock(0); assert.equal(p.visible(), 0);
+  video.clock(3); assert.equal(p.visible(), 1);
 });
