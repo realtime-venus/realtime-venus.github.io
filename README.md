@@ -6,7 +6,7 @@ Project website for **Realtime-Venus: A full-duplex interaction system with asyn
 
 ## Website content
 
-A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. Two animated paper-example scenes reveal dialogue at each event and show the listening, speaking and delegation state. The second card plays a recorded microwave scene with its synchronized model transcript and English subtitles. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
+A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. Two animated paper-example scenes reveal dialogue at each event and show the listening, speaking and delegation state. The second card plays a recorded microwave scene with its synchronized model transcript and English subtitles. All three scenes share the phase header, activity indicators, blue response bubbles and playback controls. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. The recording also provides volume, captions and full-screen controls; its native media clock drives the shared interface. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
 
 The method explains how the harness prepares a delegated reply and the frontend chooses speech timing, with the revised harness diagram and a concise description of the shared post-training recipe.
 
@@ -28,7 +28,7 @@ Run the timeline regression checks with `node --test tests/demo-timeline.test.cj
 
 ## Add recorded demos
 
-Edit `dist/assets/demos.js`. For an existing scene, set `type` to `video` and add a direct video URL or a path to a file inside `dist/`. The viewer uses a native video player with keyboard controls and no autoplay. Update the scene title, summary and source to describe the real recording.
+Edit `dist/assets/demos.js`. For an existing scene, set `type` to `video` and add a direct video URL or a path to a file inside `dist/`. Native video playback drives the shared, keyboard-accessible controls and never autoplays. Update the scene title, summary, source, duration, opening, phases, chapter marks and timed events to describe the real recording. Activity indicators illustrate the scene rather than reporting live model telemetry. Use a preview server with byte-range support to check video seeking.
 
 ```js
 {

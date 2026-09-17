@@ -26,6 +26,7 @@
   let current, time = 0, playing = false, animation = 0, previous = null, speed = 1;
   let ui = {}, lastPhase = '', lastVisible = '';
   const timestamp = value => `${String(Math.floor(value / 60)).padStart(2, '0')}:${String(Math.floor(value % 60)).padStart(2, '0')}`;
+  const cueTimestamp = value => timestamp(value) + (Number.isInteger(value) ? '' : (value % 1).toFixed(2).slice(1));
   function node(tag, className, text) {
     const el = document.createElement(tag);
     if (className) el.className = className;
@@ -38,18 +39,47 @@
   function stop() {
     playing = false; cancelAnimationFrame(animation); previous = null;
     panel.dataset.playing = 'false';
+    if (ui.video) ui.playRequest++;
+    ui.video?.pause();
+  }
+  function showVideoError(message) {
+    ui.playError.replaceChildren(node('span', '', message + ' '));
+    const link = node('a', '', 'Open the video directly');
+    link.href = current.src; link.target = '_blank'; link.rel = 'noopener';
+    ui.playError.append(link); ui.playError.hidden = false;
+  }
+  function setVideoTime(value) {
+    time = Math.max(0, Math.min(current.duration, value));
+    if (ui.video.readyState < 1) ui.pendingSeek = time;
+    else { ui.pendingSeek = null; ui.video.currentTime = time; }
   }
   function seek(value) {
-    stop(); time = value; update();
+    stop();
+    if (ui.video) setVideoTime(value); else time = value;
+    update();
   }
   function start(value) {
+    if (ui.video) {
+      if (ui.video.error) { const resume = time; ui.video.load(); setVideoTime(resume); }
+      if (Number.isFinite(value)) setVideoTime(value);
+      else if (ui.video.ended || time >= current.duration) setVideoTime(0);
+      const selectedUI = ui;
+      const request = ++ui.playRequest;
+      ui.playError.hidden = true;
+      ui.video.play()?.catch(error => {
+        if (ui !== selectedUI || request !== ui.playRequest || error.name === 'AbortError') return;
+        playing = false; ui.buffering = false; update();
+        showVideoError('Playback could not start. Press Play scene to retry.');
+      });
+      return;
+    }
     if (Number.isFinite(value)) time = value;
     if (time >= current.duration) time = 0;
     stop(); playing = true; previous = null;
     update(); animation = requestAnimationFrame(tick);
   }
   function toggle() {
-    if (playing) { stop(); update(); } else start();
+    if (ui.video ? !ui.video.paused : playing) { stop(); update(); } else start();
   }
   function tick(now) {
     if (!playing) return;
@@ -58,16 +88,16 @@
     if (playing) animation = requestAnimationFrame(tick);
   }
   function update() {
-    if (!current || current.type !== 'walkthrough') return;
+    if (!current) return;
     const state = window.VenusScene.frame(current, time);
     time = state.time;
-    if (state.complete) stop();
+    if (state.complete && playing) stop();
     panel.dataset.playing = String(playing);
     panel.dataset.accent = state.phase.accent || 'default';
     panel.dataset.complete = String(state.complete);
     ui.play.textContent = state.complete ? '↻ Replay scene' : playing ? 'Ⅱ Pause scene' : '▶ Play scene';
     ui.play.setAttribute('aria-pressed', String(playing));
-    ui.status.textContent = state.complete ? 'Complete' : playing ? 'Playing' : time === 0 ? 'Ready to play' : 'Paused';
+    ui.status.textContent = state.complete ? 'Complete' : ui.buffering && playing ? 'Loading video…' : playing ? 'Playing' : time === 0 ? 'Ready to play' : 'Paused';
     ui.counter.textContent = `${state.phaseIndex + 1} / ${current.phases.length}`;
     ui.scrubber.value = String(time);
     ui.scrubber.setAttribute('aria-valuetext', `${timestamp(time)} of ${timestamp(current.duration)}`);
@@ -118,7 +148,7 @@
     current.events.forEach(event => {
       const item = node('li', 'transcript-item' + (event.role === 'Realtime-Venus' ? ' from-venus' : '') + (event.kind ? ' ' + event.kind : ''));
       const head = node('div', 'transcript-head');
-      const cueTime = current.type === 'video' ? `${timestamp(event.time)}–${timestamp(event.end)}` : timestamp(event.time);
+      const cueTime = current.type === 'video' ? `${cueTimestamp(event.time)}–${cueTimestamp(event.end)}` : timestamp(event.time);
       head.append(node('strong', '', event.role), node('span', '', cueTime));
       item.append(head, node('p', '', event.text));
       if (event.interrupted) item.append(node('span', 'transcript-note', 'Interrupted · Realtime-Venus yields to your follow-up'));
@@ -138,8 +168,9 @@
     if (current.note) controls.append(node('p', 'playback-note', current.note));
     return transcript;
   }
-  function showWalkthrough() {
-    const stage = node('div', 'scene-stage');
+  function showScene() {
+    const isVideo = current.type === 'video';
+    const stage = node('div', 'scene-stage' + (isVideo ? ' scene-recording' : ''));
     const header = node('div', 'scene-topline');
     ui.status = node('span', 'scene-status'); ui.counter = node('span', 'scene-counter');
     header.append(ui.status, ui.counter); stage.append(header);
@@ -147,6 +178,7 @@
     ui.heading = node('h4'); ui.detail = node('p'); phase.append(ui.heading, ui.detail); stage.append(phase);
     ui.announcement = node('p', 'sr-only'); ui.announcement.setAttribute('role', 'status'); ui.announcement.setAttribute('aria-live', 'polite');
     stage.append(ui.announcement);
+    if (isVideo) appendVideo(stage);
     if (current.filmstrip) {
       const film = node('div', 'scene-film');
       const label = node('div', 'scene-film-label'); label.append(node('span', '', 'Original paper frames'), node('span', '', 'Illustrated timeline'));
@@ -170,7 +202,9 @@
     });
     stage.append(channelBox);
     ui.viewport = node('div', 'scene-conversation');
-    ui.viewport.tabIndex = 0; ui.viewport.setAttribute('role', 'region'); ui.viewport.setAttribute('aria-label', 'Scene conversation. Scroll to review earlier messages.');
+    ui.viewport.setAttribute('role', 'region');
+    ui.viewport.setAttribute('aria-label', isVideo ? 'Model response in the recorded scene' : 'Scene conversation. Scroll to review earlier messages.');
+    if (!isVideo) ui.viewport.tabIndex = 0;
     ui.empty = node('div', 'scene-opening');
     ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening), button('scene-start', '▶ Play this scene', () => start()));
     ui.chat = makeTranscript(true); ui.viewport.append(ui.empty, ui.chat); stage.append(ui.viewport);
@@ -182,7 +216,8 @@
     const speedLabel = node('label', 'playback-speed', 'Playback speed');
     const speedSelect = node('select');
     [1,1.5,2].forEach(rate => { const option = node('option', '', `${rate}×`); option.value = String(rate); speedSelect.append(option); });
-    speedSelect.value = String(speed); speedSelect.addEventListener('change', () => { speed = Number(speedSelect.value); previous = null; }); speedLabel.append(speedSelect);
+    ui.speed = speedSelect;
+    speedSelect.value = String(speed); speedSelect.addEventListener('change', () => { speed = Number(speedSelect.value); previous = null; if (ui.video) ui.video.playbackRate = speed; }); speedLabel.append(speedSelect);
     ui.scrubber = node('input', 'timeline-slider'); ui.scrubber.type = 'range'; ui.scrubber.min = '0'; ui.scrubber.max = String(current.duration); ui.scrubber.step = '.1'; ui.scrubber.setAttribute('aria-label', 'Scene timeline');
     ui.scrubber.addEventListener('input', () => seek(Number(ui.scrubber.value)));
     bar.append(ui.play, ui.time, speedLabel, ui.scrubber); controls.append(bar);
@@ -196,41 +231,108 @@
       panel.focus({preventScroll: true});
     });
     chapters.append(ui.next); controls.append(chapters);
-    appendTranscript();
+    if (isVideo) appendVideoTools();
+    ui.transcript = appendTranscript();
     update();
   }
-  function showVideo() {
-    const recording = current;
-    const video = node('video', 'recorded-demo'); video.controls = true; video.playsInline = true; video.preload = 'metadata'; video.src = current.src;
-    video.setAttribute('aria-label', current.title);
+  function appendVideo(stage) {
+    const recording = current, selectedUI = ui;
+    const frame = node('div', 'scene-film scene-video');
+    const label = node('div', 'scene-film-label');
+    label.append(node('span', '', 'Recorded scene'), node('span', '', 'Audio + video'));
+    const video = node('video', 'recorded-demo');
+    ui.video = video; ui.pendingSeek = null; ui.buffering = false; ui.playRequest = 0;
+    video.controls = false; video.playsInline = true; video.preload = 'metadata'; video.src = current.src;
+    video.playbackRate = speed; video.setAttribute('aria-label', current.title);
     if (current.width && current.height) { video.width = current.width; video.height = current.height; video.style.aspectRatio = `${current.width} / ${current.height}`; }
     if (current.poster) video.poster = current.poster;
-    if (current.captions) { const track = node('track'); track.kind = 'subtitles'; track.src = current.captions; track.srclang = current.language || 'en'; track.label = 'Model response (English)'; track.default = true; video.append(track); }
-    video.append(node('p', '', 'Your browser does not support this video.'));
-    video.addEventListener('error', () => {
-      if (current !== recording) return;
-      const message = node('p', 'video-error', 'The recording could not be loaded. ');
-      const link = node('a', '', 'Open the video directly'); link.href = recording.src; link.target = '_blank'; link.rel = 'noopener'; message.append(link); media.append(message);
-    }, {once: true});
-    media.append(video);
-    if (current.events?.length) {
-      const transcript = appendTranscript();
-      video.addEventListener('timeupdate', () => {
-        recording.events.forEach((event, i) => {
-          const item = transcript.children[i];
-          const active = video.currentTime >= event.time && video.currentTime < event.end;
-          item.classList.toggle('is-active', active);
-          if (active) item.setAttribute('aria-current', 'step'); else item.removeAttribute('aria-current');
-        });
-      });
+    if (current.captions) {
+      const track = node('track'); track.kind = 'subtitles'; track.src = current.captions;
+      track.srclang = current.language || 'en'; track.label = 'Model response (English)'; track.default = true;
+      video.append(track); ui.captionTrack = track;
     }
-    const syncPlayback = () => { if (current === recording) panel.dataset.playing = String(!video.paused && !video.ended); };
-    ['play', 'pause', 'ended'].forEach(event => video.addEventListener(event, syncPlayback));
+    video.append(node('p', '', 'Your browser does not support this video.'));
+    const sync = () => {
+      if (ui !== selectedUI) return;
+      time = ui.pendingSeek ?? (Number.isFinite(video.currentTime) ? video.currentTime : 0);
+      playing = !video.paused && !video.ended;
+      update();
+      if (ui.transcript) recording.events.forEach((event, i) => {
+        const item = ui.transcript.children[i], active = time >= event.time && time < event.end;
+        item.classList.toggle('is-active', active);
+        if (active) item.setAttribute('aria-current', 'step'); else item.removeAttribute('aria-current');
+      });
+    };
+    ['timeupdate', 'seeked', 'play', 'pause', 'ended'].forEach(event => video.addEventListener(event, sync));
+    video.addEventListener('loadedmetadata', () => {
+      if (ui !== selectedUI) return;
+      if (Number.isFinite(video.duration) && video.duration > 0) { current.duration = video.duration; ui.scrubber.max = String(video.duration); }
+      if (ui.pendingSeek !== null) setVideoTime(ui.pendingSeek);
+      sync();
+    });
+    video.addEventListener('waiting', () => { if (ui === selectedUI) { ui.buffering = true; sync(); } });
+    ['playing', 'canplay'].forEach(event => video.addEventListener(event, () => { if (ui === selectedUI) { ui.buffering = false; sync(); } }));
+    video.addEventListener('ratechange', () => { if (ui === selectedUI) { speed = video.playbackRate; ui.speed.value = String(speed); } });
+    video.addEventListener('error', () => {
+      if (ui !== selectedUI) return;
+      ui.playRequest++;
+      playing = false; ui.buffering = false; update();
+      showVideoError('The recording could not be loaded.');
+    });
+    frame.append(label, video); stage.append(frame);
+  }
+  function appendVideoTools() {
+    const video = ui.video, selectedUI = ui;
+    const tools = node('div', 'video-tools'); tools.setAttribute('aria-label', 'Video sound and display controls');
+    const mute = button('video-tool', 'Mute', () => {
+      if (video.muted || video.volume === 0) { video.muted = false; if (video.volume === 0) video.volume = 1; }
+      else video.muted = true;
+    });
+    mute.setAttribute('aria-pressed', 'false');
+    const volumeLabel = node('label', 'video-volume');
+    volumeLabel.append(node('span', 'sr-only', 'Video volume'));
+    const volume = node('input'); volume.type = 'range'; volume.min = '0'; volume.max = '1'; volume.step = '.05'; volume.value = '1';
+    volume.setAttribute('aria-label', 'Video volume');
+    volume.addEventListener('input', () => { video.volume = Number(volume.value); video.muted = video.volume === 0; });
+    volumeLabel.append(volume);
+    video.addEventListener('volumechange', () => {
+      const muted = video.muted || video.volume === 0;
+      mute.textContent = muted ? 'Unmute' : 'Mute'; mute.setAttribute('aria-pressed', String(muted)); volume.value = String(muted ? 0 : video.volume);
+    });
+    tools.append(mute, volumeLabel);
+    if (ui.captionTrack) {
+      const captionTrack = ui.captionTrack;
+      const applyCaptions = () => { if (captionTrack.track) captionTrack.track.mode = captions.getAttribute('aria-pressed') === 'true' ? 'showing' : 'disabled'; };
+      const captions = button('video-tool', 'Captions', () => {
+        const enabled = captions.getAttribute('aria-pressed') !== 'true';
+        captions.setAttribute('aria-pressed', String(enabled));
+        applyCaptions();
+      });
+      captionTrack.addEventListener('load', applyCaptions);
+      video.textTracks?.addEventListener('change', () => {
+        if (captionTrack.track) captions.setAttribute('aria-pressed', String(captionTrack.track.mode === 'showing'));
+      });
+      captions.setAttribute('aria-pressed', 'true'); tools.append(captions);
+    }
+    const fullscreen = button('video-tool', 'Full screen', () => {
+      video.controls = true;
+      try {
+        if (video.requestFullscreen) video.requestFullscreen()?.catch(() => { video.controls = false; });
+        else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+      } catch { video.controls = false; }
+    });
+    fullscreen.hidden = !video.requestFullscreen && !video.webkitEnterFullscreen;
+    const restoreControls = () => { if (ui === selectedUI && !document.fullscreenElement && !video.webkitDisplayingFullscreen) video.controls = false; };
+    video.addEventListener('fullscreenchange', restoreControls);
+    video.addEventListener('webkitendfullscreen', restoreControls);
+    tools.append(fullscreen); controls.append(tools);
+    ui.playError = node('p', 'video-error'); ui.playError.setAttribute('role', 'status'); ui.playError.hidden = true;
+    controls.append(ui.playError);
   }
   function select(id, focus = false) {
     const match = demos.find(demo => demo.id === id);
     if (!match) return;
-    stop(); media.querySelector('video')?.pause(); current = match; time = 0;
+    stop(); current = match; time = 0;
     media.replaceChildren(); controls.replaceChildren(); ui = {}; lastPhase = ''; lastVisible = '';
     panel.dataset.complete = 'false'; panel.dataset.accent = 'default';
     tabs.forEach(tab => { const active = tab.dataset.demo === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; if (active && focus) tab.focus(); });
@@ -246,17 +348,11 @@
     if (current.figure) figureLink.href = current.figure;
     spotlight.hidden = !current.spotlight;
     if (!spotlight.hidden) spotlight.textContent = current.spotlight.label + ' ↗';
-    if (current.type === 'video') showVideo(); else showWalkthrough();
+    showScene();
   }
   spotlight.addEventListener('click', () => {
     if (!current.spotlight) return;
-    const position = Math.max(0, current.spotlight.time - 2);
-    if (current.type === 'video') {
-      const video = media.querySelector('video');
-      if (!video) return;
-      video.currentTime = position;
-      video.play()?.catch(() => video.focus());
-    } else start(position);
+    start(Math.max(0, current.spotlight.time - 2));
   });
   tabs.forEach((tab, index) => {
     tab.addEventListener('click', () => {
@@ -277,7 +373,7 @@
     link.addEventListener('click', () => select(link.dataset.openDemo));
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { stop(); if (current?.type === 'walkthrough') update(); media.querySelector('video')?.pause(); }
+    if (document.hidden) { stop(); update(); }
   });
   if (demos.length) select(demos[0].id);
 })();

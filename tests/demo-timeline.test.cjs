@@ -28,6 +28,18 @@ test('Delegation overlaps with input, then returns to speech', () => {
   assert.deepEqual(frame('delegation',15).channels,['listen','speak']);
   assert.deepEqual(frame('delegation',15).visible,[0,1,2,3]);
 });
+test('The recorded scene reveals its reply only during the playback interval and rewinds cleanly', () => {
+  assert.deepEqual(frame('proactive',29.99).visible,[]);
+  assert.deepEqual(frame('proactive',30).channels,['listen','speak']);
+  assert.deepEqual(frame('proactive',30).active,[0]);
+  assert.deepEqual(frame('proactive',34.28).channels,['listen']);
+  assert.deepEqual(frame('proactive',34.28).active,[]);
+  assert.deepEqual(frame('proactive',34.28).visible,[0]);
+  assert.equal(frame('proactive',45).complete,true);
+  assert.deepEqual(frame('proactive',45).channels,[]);
+  assert.deepEqual(frame('proactive',0).visible,[]);
+  assert.equal(frame('proactive',0).complete,false);
+});
 test('An interruption stops the original response before the new answer', () => {
   assert.deepEqual(frame('interruption',12.9).channels,['listen','speak']);
   assert.deepEqual(frame('interruption',13).channels,['listen']);
