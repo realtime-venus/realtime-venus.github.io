@@ -6,15 +6,19 @@ Project website for **Realtime-Venus: A full-duplex interaction system with asyn
 
 ## Website content
 
-A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. The first card plays a real stereo road-trip conversation with synchronized dialogue and a waveform measured from its two audio channels. The second card plays a recorded microwave scene with its synchronized model transcript and English subtitles. The third card illustrates the paper’s delegation example. All three scenes share the phase header, activity indicators, blue response bubbles and playback controls. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. Both recordings provide volume controls and use their native media clocks to drive the interface; the video also provides captions and full-screen controls. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
+A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. The first card plays a real stereo road-trip conversation with synchronized dialogue and a waveform measured from its two audio channels. The second card plays a recorded microwave scene with its synchronized model transcript and English subtitles. The third card pairs Shanghai landmark footage with the supplied user and assistant speech clips to illustrate a delegated flight search. All three scenes share the phase header, activity indicators, blue response bubbles and playback controls. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. All three players provide volume controls and use their native media clocks to drive the interface; both videos also provide captions and full-screen controls. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
 
 The method explains how the harness prepares a delegated reply and the frontend chooses speech timing, with the revised harness diagram and a concise description of the shared post-training recipe.
 
-The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation; the animated delegation example also links to its source figure. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
+The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation and a synchronized transcript. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
 
-Scene 01 uses the supplied `case_stereo.wav` and `audio_demo.txt`. The original 37-second stereo PCM recording is preserved without re-encoding. Approximate dialogue cues are aligned to channel activity at 0, 3.5, 15.1 and 18.3 seconds; the first reply continues briefly after the follow-up starts, and the recording retains its silent tail. These cues are not response-latency measurements. Scene 03 is an **illustration reconstructed from Figure 4**, not a real model recording or a live service. Scene 02 uses the supplied `test2_microwave.mp4` and the reply in `test2_microwave_io.jsonl`. The MP4 is 45 seconds; the log’s `played` interval, 30–34.28 seconds, supplies the transcript and subtitle timing. The generation interval is not used as subtitle timing. Only the model dialogue is published; internal paths and run metadata are omitted. Research scores remain from the September 9, 2026 manuscript. The delegation transcript is translated from Chinese and its example traffic information is not current guidance.
+Scene 01 uses the supplied `case_stereo.wav` and `audio_demo.txt`. The original 37-second stereo PCM recording is preserved without re-encoding. Approximate dialogue cues are aligned to channel activity at 0, 3.5, 15.1 and 18.3 seconds; the first reply continues briefly after the follow-up starts, and the recording retains its silent tail. These cues are not response-latency measurements.
 
-The filmstrip cursor uses the original figure’s 0–40 s axis, independently of the shorter authored playback endpoints. Dialogue appears as complete messages at the reported events; no word-level speech timing is implied; Scene 03 has no recorded audio. Playback starts only on visitor action. Reduced-motion preferences disable message entrances and activity motion, and make the filmstrip cursor step between phases.
+Scene 03 is assembled from the supplied `video.mp4`, `user.mp3`, `assistant_01.wav`, `assistant_02.wav`, and `dialogue.txt`. The video is resized to 1280×720 and encoded for the web; its original soundtrack is reduced to 15% volume under the complete speech clips. User speech begins at 4 s, the acknowledgement at 10 s and the final reply at 24 s. The final clip continues to 33.926833 s, preserving the full recording rather than cutting it at the storyboard’s 32 s endpoint. The video lasts 35.28 s. Delegation states illustrate the storyboard, not measured backend activity; flight details are demonstration content, not live availability.
+
+Scene 02 uses the supplied `test2_microwave.mp4` and the reply in `test2_microwave_io.jsonl`. The MP4 is 45 seconds; the log’s `played` interval, 30–34.28 seconds, supplies the transcript and subtitle timing. The generation interval is not used as subtitle timing. Only demonstration content is published; internal paths and run metadata are omitted. Research scores remain from the September 9, 2026 manuscript. Scene 03 follows the supplied English dialogue.
+
+Dialogue appears as complete messages at the aligned events; no word-level speech timing is implied. Playback starts only on visitor action. Reduced-motion preferences disable message entrances and activity motion, without changing the recording timelines.
 
 ## Local preview
 
@@ -24,7 +28,7 @@ The complete static site is in `dist/`. There are no dependencies or build steps
 python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
 ```
 
-Run the timeline regression checks with `node --test tests/demo-timeline.test.cjs`. They cover overlapping delegation/input, interruption handling, the recorded microwave subtitle interval, the original filmstrip time axis, rewinding and completion.
+Run the timeline regression checks with `node --test tests/demo-timeline.test.cjs`. They cover overlapping delegation/input, interruption handling, the recorded microwave subtitle interval, the assembled delegation timeline, rewinding and completion.
 
 ## Add recorded demos
 
@@ -51,6 +55,9 @@ Edit `dist/assets/demos.js`. For an existing scene, set `type` to `audio` or `vi
 - `dist/assets/site.js`: walkthroughs, video playback and citation copying.
 - `dist/assets/demos.js`: demo content and media settings.
 - `dist/assets/demo-engine.js`: shared, deterministic timeline state for animation and navigation.
+- `dist/assets/demos/shanghai-flights.mp4`: Shanghai footage combined with the three supplied speech clips.
+- `dist/assets/demos/shanghai-flights-poster.jpg`: Shanghai skyline cover extracted from the footage.
+- `dist/assets/demos/shanghai-flights.en.vtt`: complete user/assistant utterances aligned to the clips.
 - `dist/assets/demos/road-trip.wav`: original stereo road-trip recording.
 - `dist/assets/demos/road-trip-waveform.svg`: measured two-channel amplitude envelope.
 - `dist/assets/demos/microwave.mp4`: supplied recording, remuxed for fast-start playback without re-encoding.

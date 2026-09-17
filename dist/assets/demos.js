@@ -40,31 +40,127 @@ window.VENUS_DEMOS = [
     "note": "The state indicators are a playback guide. The model reply is synchronized to the recording."
   },
   {
-    id:'delegation', type:'walkthrough', model:'Realtime-Venus-Omni',
-    category:'Asynchronous delegation',title:'A task runs. The conversation stays open.',
-    takeaway:'During the 10–15 s lookup, audio–visual input stays active. The prepared reply rejoins the conversation at 15 s.',
-    summary:'The frontend acknowledges a request while the harness looks up external information. The audio–visual stream continues throughout.',
-    source:'Figure 4 · English translation of the paper’s Chinese dialogue.',
-    figure:'./assets/delegation-example.png?v=7',filmstrip:'./assets/delegation-filmstrip.jpg',
-    filmstripAlt:'Original driving-scene frames from the manuscript example.',
-    duration:22,input:'Audio + video input',filmstripDuration:40,
-    opening:'You are on the road. Ask Realtime-Venus to check the day’s driving restrictions.',
-    spotlight:{time:10,label:'Watch the lookup'},
-    phases:[
-      {time:0,title:'Follow the road',detail:'The audio–visual context stays available.',channels:['listen']},
-      {time:3,title:'You ask. Realtime-Venus listens.',detail:'A question needs information from an external service.',channels:['listen']},
-      {time:8,title:'Acknowledge the request',detail:'A short reply keeps the conversation moving.',channels:['listen','speak']},
-      {time:10,title:'The lookup runs. Input stays active.',detail:'The harness works in parallel with the interaction loop.',channels:['listen','delegate'],accent:'delegation'},
-      {time:15,title:'The answer rejoins the conversation',detail:'The harness prepares a reply; the frontend brings it into the conversation.',channels:['listen','speak'],accent:'response'}
+    "id": "delegation",
+    "type": "video",
+    "model": "Realtime-Venus-Omni",
+    "format": "Video + dialogue demo",
+    "mediaLabel": "Video + dialogue",
+    "category": "Asynchronous delegation",
+    "title": "See the city. Find a flight.",
+    "summary": "Recognize Shanghai from the view, then hand off a flight search while the video continues.",
+    "takeaway": "After identifying Shanghai, the scene delegates a Beijing–Shanghai flight search. The spoken result returns at 24 s, with the city still in view.",
+    "source": "Video and dialogue clips aligned to the supplied storyboard.",
+    "src": "./assets/demos/shanghai-flights.mp4",
+    "poster": "./assets/demos/shanghai-flights-poster.jpg",
+    "captions": "./assets/demos/shanghai-flights.en.vtt",
+    "captionLabel": "English dialogue",
+    "language": "en",
+    "width": 1280,
+    "height": 720,
+    "duration": 35.28,
+    "input": "Audio + video input",
+    "opening": "A view of Shanghai leads to a request for a flight from Beijing.",
+    "spotlight": {
+      "time": 14.052333,
+      "label": "Follow the flight search"
+    },
+    "phases": [
+      {
+        "time": 0,
+        "title": "A city comes into view",
+        "detail": "Watch the Shanghai skyline before the question begins.",
+        "channels": [
+          "listen"
+        ]
+      },
+      {
+        "time": 4,
+        "title": "A view becomes a request",
+        "detail": "You ask where this is and request a flight from Beijing to that city.",
+        "channels": [
+          "listen"
+        ]
+      },
+      {
+        "time": 10,
+        "title": "Identify the city. Acknowledge the task.",
+        "detail": "Realtime-Venus names Shanghai and acknowledges the flight request.",
+        "channels": [
+          "listen",
+          "speak"
+        ]
+      },
+      {
+        "time": 14.052333,
+        "title": "The search runs. The scene continues.",
+        "detail": "The storyboard hands the Beijing–Shanghai flight search to the harness.",
+        "channels": [
+          "listen",
+          "delegate"
+        ],
+        "accent": "delegation"
+      },
+      {
+        "time": 24,
+        "title": "The result rejoins the conversation",
+        "detail": "Realtime-Venus presents the flight options described in the demo.",
+        "channels": [
+          "listen",
+          "speak"
+        ],
+        "accent": "response"
+      },
+      {
+        "time": 33.926833,
+        "title": "The response finishes",
+        "detail": "The city view continues after the spoken result.",
+        "channels": [
+          "listen"
+        ]
+      }
     ],
-    marks:[{time:3,label:'Ask a question'},{time:10,label:'Delegate the lookup'},{time:15,label:'Bring the answer back'}],
-    events:[
-      {time:3,end:8,role:'You',text:'Please check which license-plate endings are restricted in Beijing today.'},
-      {time:8,end:10,role:'Realtime-Venus',text:'Sure, I’ll check.'},
-      {time:10,end:15,role:'Harness',text:'Querying the external service while the input stream continues.',kind:'event'},
-      {time:15,end:22,role:'Realtime-Venus',text:'Today, vehicles with license plates ending in 3 or 8 are restricted in Beijing, from 7:00 to 20:00.'}
+    "marks": [
+      {
+        "time": 4,
+        "label": "Ask about the view"
+      },
+      {
+        "time": 14.052333,
+        "label": "Delegate the search"
+      },
+      {
+        "time": 24,
+        "label": "Hear the result"
+      }
     ],
-    note:'Traffic information is quoted from the paper example, not current guidance. The five-second query interval is an example timeline, not a latency benchmark.'
+    "events": [
+      {
+        "time": 4,
+        "end": 10.452245,
+        "role": "You",
+        "text": "This view is beautiful! Where is this? Can you find me a flight from Beijing to that city today?"
+      },
+      {
+        "time": 10,
+        "end": 14.052333,
+        "role": "Realtime-Venus",
+        "text": "That’s Shanghai. I will find today’s flight from Beijing."
+      },
+      {
+        "time": 14.052333,
+        "end": 24,
+        "role": "Harness",
+        "text": "Find suitable flights from Beijing to Shanghai today.",
+        "kind": "event"
+      },
+      {
+        "time": 24,
+        "end": 33.926833,
+        "role": "Realtime-Venus",
+        "text": "I found twelve flights. I’d recommend the three p.m. flight from Beijing Capital to Shanghai Hongqiao, arriving at five twenty p.m."
+      }
+    ],
+    "note": "Assembled from the supplied video and speech clips. Delegation states follow the storyboard; they are not a live search or a latency measurement. Flight details are part of the demonstration."
   },
   {
     "id": "interruption",

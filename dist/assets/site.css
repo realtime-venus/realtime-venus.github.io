@@ -227,6 +227,7 @@ nav a:last-child { color: var(--accent); }
 .scene-recording .scene-opening { min-height: 132px; max-width: none; margin: 0; gap: .6rem; }
 .scene-recording .scene-opening > p { font-size: var(--type-body); }
 .scene-recording .scene-chat .transcript-item { width: 100%; }
+.scene-recording.scene-dialogue .scene-conversation { height: 320px; overflow-y: auto; }
 .scene-video .recorded-demo { border-radius: 10px; }
 .playback-bar { flex-wrap: wrap; gap: .8rem 1.2rem; }
 .walkthrough-play { min-width: 145px; }

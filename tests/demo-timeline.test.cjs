@@ -21,12 +21,24 @@ test('The recorded microwave reply and captions use playback timestamps', () => 
   assert.ok(captions.includes('00:00:30.000 --> 00:00:34.280'));
   assert.ok(captions.includes(recording.events[0].text));
 });
-test('Delegation overlaps with input, then returns to speech', () => {
-  assert.deepEqual(frame('delegation',9).channels,['listen','speak']);
-  assert.deepEqual(frame('delegation',10).channels,['listen','delegate']);
-  assert.deepEqual(frame('delegation',14.9).visible,[0,1,2]);
-  assert.deepEqual(frame('delegation',15).channels,['listen','speak']);
-  assert.deepEqual(frame('delegation',15).visible,[0,1,2,3]);
+test('The flight-search scene follows the complete dialogue clips and delegation interval', () => {
+  const recording=scenes.delegation;
+  assert.equal(recording.type,'video');assert.equal(recording.duration,35.28);
+  for (const key of ['src','poster','captions']) assert.ok(fs.existsSync(path.join(__dirname,'../dist',recording[key])));
+  assert.deepEqual(frame('delegation',3.99).visible,[]);
+  assert.deepEqual(frame('delegation',4).active,[0]);
+  assert.deepEqual(frame('delegation',10).channels,['listen','speak']);
+  assert.deepEqual(frame('delegation',10).active,[0,1]);
+  assert.deepEqual(frame('delegation',14.1).channels,['listen','delegate']);
+  assert.deepEqual(frame('delegation',23.99).visible,[0,1,2]);
+  assert.deepEqual(frame('delegation',24).channels,['listen','speak']);
+  assert.deepEqual(frame('delegation',24).active,[3]);
+  assert.deepEqual(frame('delegation',33.8).active,[3],'Preserve the full final reply beyond the old 32 s storyboard endpoint');
+  assert.deepEqual(frame('delegation',33.93).active,[]);
+  const captions=fs.readFileSync(path.join(__dirname,'../dist',recording.captions),'utf8');
+  assert.ok(captions.includes('00:00:24.000 --> 00:00:33.927'));
+  assert.ok(captions.includes(recording.events[3].text));
+  assert.ok(!captions.includes('Harness:'),'Background instructions are not spoken subtitles');
 });
 test('The recorded scene reveals its reply only during the playback interval and rewinds cleanly', () => {
   assert.deepEqual(frame('proactive',29.99).visible,[]);
@@ -58,9 +70,6 @@ test('The stereo recording preserves overlap and follows the new dialogue cues',
   assert.match(recording.events[1].text,/starting city/);
   assert.match(recording.events[3].text,/overnight stays/);
 });
-test('Film position follows the paper’s 40 s axis, not the playback endpoint', () => {
-  assert.equal(frame('delegation',20).filmProgress,.5);
-});
 test('Rewinding hides future dialogue and completion does not stick', () => {
   assert.equal(frame('interruption',37).complete,true);
   assert.equal(frame('interruption',13).complete,false);
@@ -70,7 +79,7 @@ test('Rewinding hides future dialogue and completion does not stick', () => {
 test('Out-of-range positions clamp and a completed scene has no active channels', () => {
   assert.equal(frame('delegation',-5).time,0);
   const end=frame('delegation',100);
-  assert.equal(end.time,22);
+  assert.equal(end.time,35.28);
   assert.equal(end.complete,true);
   assert.deepEqual(end.channels,[]);
   assert.deepEqual(end.active,[]);
