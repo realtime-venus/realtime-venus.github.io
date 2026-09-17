@@ -26,6 +26,10 @@
   let current, time = 0, playing = false, animation = 0, previous = null, speed = 1;
   let ui = {};
   const sessions = new Map();
+  // The Sites asset proxy does not preserve byte-range responses. Use the public
+  // project's range-capable media origin there; local and GitHub previews stay relative.
+  const deliveryOrigin = window.location?.hostname === 'venus-realtime.huoge2006.chatgpt.site' ? 'https://realtime-venus.github.io/' : null;
+  const mediaURL = src => deliveryOrigin ? new URL(src, deliveryOrigin).href : src;
   const connection = navigator.connection;
   const limitedConnection = () => connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '');
   let demosNearby = !('IntersectionObserver' in window);
@@ -50,7 +54,7 @@
   function showRecordingError(message) {
     ui.playError.replaceChildren(node('span', '', message + ' '));
     const link = node('a', '', current.type === 'audio' ? 'Open the audio directly' : 'Open the video directly');
-    link.href = current.src; link.target = '_blank'; link.rel = 'noopener';
+    link.href = mediaURL(current.src); link.target = '_blank'; link.rel = 'noopener';
     ui.playError.append(link); ui.playError.hidden = false;
   }
   function prepareRecording(explicit = false) {
@@ -323,13 +327,14 @@
     ui.recording = player; ui.pendingSeek = null; ui.buffering = false; ui.playRequest = 0; ui.wantsPlay = false;
     player.controls = false; player.playsInline = true; player.preload = 'metadata';
     const supportsOptimized = !current.playbackType || !player.canPlayType || player.canPlayType(current.playbackType);
-    player.src = current.playbackSrc && supportsOptimized ? current.playbackSrc : current.src;
+    if (deliveryOrigin) player.crossOrigin = 'anonymous';
+    player.src = mediaURL(current.playbackSrc && supportsOptimized ? current.playbackSrc : current.src);
     prepareRecording();
     player.playbackRate = speed; player.setAttribute('aria-label', current.title);
     if (current.width && current.height) { player.width = current.width; player.height = current.height; player.style.aspectRatio = `${current.width} / ${current.height}`; }
     if (current.poster) player.poster = current.poster;
     if (current.captions) {
-      const track = node('track'); track.kind = 'subtitles'; track.src = current.captions;
+      const track = node('track'); track.kind = 'subtitles'; track.src = mediaURL(current.captions);
       track.srclang = current.language || 'en'; track.label = current.captionLabel || 'Model response (English)'; track.default = true;
       player.append(track); ui.captionTrack = track;
     }
