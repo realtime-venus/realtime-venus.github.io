@@ -112,7 +112,6 @@ nav a:last-child { color: var(--accent); }
 .demo-tab-description { display: block; color: var(--muted); font-size: var(--type-small); margin-top: .5rem; line-height: 1.6; min-height: 3.2em; }
 .demo-tab-action { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--accent); font-size: var(--type-small); margin-top: 1rem; }
 .demo-tab[aria-selected="true"] .demo-tab-action { font-weight: 600; }
-.demo-disclosure { color: var(--muted); font-size: var(--type-caption); max-width: 95ch; margin: 1.2rem 0 2rem; }
 .demo-panel { background: #fff; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
 .demo-panel-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .4rem 1rem; background: var(--wash); border-bottom: 1px solid var(--line); padding: 1rem 2.5rem; color: var(--muted); font-size: var(--type-caption); }
 .demo-panel-top > span:first-child { color: var(--ink); font-weight: 500; }
@@ -127,7 +126,6 @@ nav a:last-child { color: var(--accent); }
 .demo-description .section-number { color: var(--accent); margin-bottom: .75rem; }
 .demo-description h3 { font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.25; margin-bottom: 1rem; color: var(--ink); }
 .demo-description > p { color: var(--muted); font-size: var(--type-body); line-height: 1.65; }
-.demo-description > .demo-source { margin-top: 1.2rem; font-size: var(--type-caption); color: var(--muted); line-height: 1.6; }
 .demo-description > a { display: inline-block; margin-top: .75rem; font-size: var(--type-small); color: var(--accent); }
 .stream-context { border: 1px solid var(--line); background: var(--paper); border-radius: 9px; padding: 1rem; }
 .stream-label { display: block; color: var(--muted); font-size: var(--type-caption); font-weight: 500; margin-bottom: .65rem; }
@@ -471,7 +469,6 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .demo-tab-copy { padding: .65rem .85rem; }
 .demo-tab-meta { flex-wrap: wrap; gap: .1rem .5rem; margin-bottom: .3rem; }
 .demo-tab-copy > strong { font-size: 1rem; line-height: 1.35; }
-.demo-disclosure { margin: .75rem 0 0; max-width: none; }
 .demo-panel-top { padding: .5rem 1.25rem; }
 .demo-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: .6rem 1.25rem; padding: .8rem 1.25rem; }
 .demo-panel-heading h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.3; }
@@ -482,7 +479,6 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .demo-description-body { padding: .35rem 0 1rem; max-width: 90ch; }
 .demo-description-body .section-number { margin-bottom: .35rem; }
 .demo-description-body > p { color: var(--muted); font-size: var(--type-body); line-height: 1.6; }
-.demo-description-body > .demo-source { margin-top: .65rem; font-size: var(--type-caption); }
 .demo-description-body > a { display: inline-block; margin-top: .5rem; color: var(--accent); font-size: var(--type-small); }
 .demo-takeaway { margin-top: .75rem; padding-top: .75rem; }
 .scene-stage { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.25rem; align-items: stretch; overflow: visible; }
