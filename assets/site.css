@@ -159,6 +159,12 @@ nav a:last-child { color: var(--accent); }
 .playback-note { font-size: var(--type-caption); color: var(--muted); line-height: 1.65; margin-top: .5rem; padding: 0; }
 .recorded-demo { display: block; width: 100%; height: auto; max-height: 650px; aspect-ratio: 16/9; background: #edf2f8; border-radius: 7px; }
 .video-error { font-size: var(--type-small); color: var(--rose); }
+.video-error a { text-decoration: underline; }
+.video-tools { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin: .5rem 0 1rem; }
+.video-tool { min-height: 44px; padding: .45rem .8rem; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); color: var(--muted); font-size: var(--type-small); }
+.video-tool:hover, .video-tool[aria-pressed="true"] { background: var(--blue-soft); border-color: var(--blue-line); color: var(--accent); }
+.video-volume { display: flex; align-items: center; min-height: 44px; margin-right: auto; }
+.video-volume input { width: 80px; max-width: 20vw; accent-color: var(--accent); }
 
 /* A scene player with a deterministic paper-example timeline. */
 [hidden] { display: none !important; }
@@ -215,6 +221,11 @@ nav a:last-child { color: var(--accent); }
 .scene-chat .transcript-item.was-interrupted { border-style: dashed; background: var(--wash); box-shadow: none; border-color: var(--line); }
 .scene-chat .transcript-item p { font-size: 1rem; line-height: 1.65; }
 .scene-chat .transcript-item .transcript-note { color: var(--rose); }
+.scene-recording .scene-conversation { height: auto; min-height: 170px; overflow: visible; }
+.scene-recording .scene-opening { min-height: 132px; max-width: none; margin: 0; gap: .6rem; }
+.scene-recording .scene-opening > p { font-size: var(--type-body); }
+.scene-recording .scene-chat .transcript-item { width: 100%; }
+.scene-video .recorded-demo { border-radius: 10px; }
 .playback-bar { flex-wrap: wrap; gap: .8rem 1.2rem; }
 .walkthrough-play { min-width: 145px; }
 .playback-time { margin-right: auto; }

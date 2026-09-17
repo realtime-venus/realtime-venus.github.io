@@ -22,6 +22,13 @@ window.VENUS_DEMOS = [
       "time": 30,
       "label": "Watch the response · 30 s"
     },
+    "opening": "Watch the microwave scene. The model reply appears at 30 s.",
+    "phases": [
+      {"time": 0, "title": "Watch and listen", "detail": "Follow the recorded microwave scene before the reply.", "channels": ["listen"]},
+      {"time": 30, "title": "Realtime-Venus responds", "detail": "The reply identifies the sound and explains what it means.", "channels": ["listen", "speak"], "accent": "response"},
+      {"time": 34.28, "title": "The reply finishes", "detail": "The video continues after the model response.", "channels": ["listen"]}
+    ],
+    "marks": [{"time": 0, "label": "Watch the scene"}, {"time": 30, "label": "The response begins"}, {"time": 34.28, "label": "After the response"}],
     "events": [
       {
         "time": 30,
@@ -30,7 +37,7 @@ window.VENUS_DEMOS = [
         "text": "The microwave just beeped — the heating cycle is complete."
       }
     ],
-    "note": "The model transcript is synchronized to the video from 30.00 to 34.28 s."
+    "note": "The state indicators are a playback guide. The model reply follows the recorded 30.00–34.28 s interval."
   },
   {
     id:'delegation', type:'walkthrough', model:'Realtime-Venus-Omni',
