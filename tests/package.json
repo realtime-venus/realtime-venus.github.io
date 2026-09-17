@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "scripts": { "test": "node --test *.test.cjs" },
+  "devDependencies": { "linkedom": "0.18.13" }
+}
