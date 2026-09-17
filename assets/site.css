@@ -157,7 +157,7 @@ nav a:last-child { color: var(--accent); }
 .walkthrough-chapters button { font-size: var(--type-caption); border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: var(--paper); min-height: 36px; padding: .35rem .7rem; }
 .walkthrough-chapters button:hover { background: var(--blue-soft); border-color: var(--blue-line); color: var(--accent); }
 .playback-note { font-size: var(--type-caption); color: var(--muted); line-height: 1.65; margin-top: .5rem; padding: 0; }
-.recorded-demo { display: block; width: 100%; max-height: 650px; aspect-ratio: 16/9; background: #edf2f8; border-radius: 7px; }
+.recorded-demo { display: block; width: 100%; height: auto; max-height: 650px; aspect-ratio: 16/9; background: #edf2f8; border-radius: 7px; }
 .video-error { font-size: var(--type-small); color: var(--rose); }
 
 /* A scene player with a deterministic paper-example timeline. */

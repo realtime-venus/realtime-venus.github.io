@@ -1,29 +1,36 @@
 // Real recordings can be added with type: 'video', src and optional poster/captions.
-// The supplied examples are explicitly presented as manuscript walkthroughs.
+// Recorded demos use playback-aligned transcripts; other scenes remain manuscript walkthroughs.
 window.VENUS_DEMOS = [
   {
-    id: 'proactive', type: 'walkthrough', model: 'Realtime-Venus-Omni',
-    category: 'Proactive perception', title: 'The event happens. Realtime-Venus responds.',
-    takeaway: 'At 16 s, the whistle triggers a reminder. Watching and listening continue after the initial request.',
-    summary: 'Realtime-Venus keeps watching and listening after the request, then responds when the relevant event happens.',
-    source: 'Figure 4 · Dialogue and event markers from the report.',
-    figure: './assets/proactive-example.png?v=7', filmstrip: './assets/proactive-filmstrip.jpg',
-    filmstripAlt: 'Original football-match frames from the manuscript example.',
-    duration: 20, input: 'Audio + video input', filmstripDuration: 40,
-    opening: 'You are watching a football match. Ask Realtime-Venus to catch the opening whistle.',
-    spotlight: {time:16, label:'Watch the whistle response · 16 s'},
-    phases: [
-      {time:0, title:'Follow the match', detail:'Continuous perception keeps the scene in context.', channels:['listen']},
-      {time:3, title:'The reminder is set', detail:'Realtime-Venus keeps watching for the requested event.', channels:['listen']},
-      {time:16, title:'The whistle blows. Realtime-Venus responds.', detail:'The event triggers a spoken reminder.', channels:['listen','speak'], accent:'response'}
+    "id": "proactive",
+    "type": "video",
+    "model": "Realtime-Venus-Omni",
+    "category": "Proactive audio–visual perception",
+    "title": "The microwave beeps. Realtime-Venus responds.",
+    "takeaway": "At 30 s, the model response identifies the microwave’s beep and explains that the heating cycle is complete.",
+    "summary": "Watch a microwave heating cycle alongside Realtime-Venus’s response when the cycle ends.",
+    "source": "Recorded scene · Synchronized model transcript.",
+    "src": "./assets/demos/microwave.mp4",
+    "poster": "./assets/demos/microwave-poster.jpg",
+    "captions": "./assets/demos/microwave.en.vtt",
+    "language": "en",
+    "duration": 45,
+    "width": 960,
+    "height": 544,
+    "input": "Audio + video input",
+    "spotlight": {
+      "time": 30,
+      "label": "Watch the response · 30 s"
+    },
+    "events": [
+      {
+        "time": 30,
+        "end": 34.28,
+        "role": "Realtime-Venus",
+        "text": "The microwave just beeped — the heating cycle is complete."
+      }
     ],
-    marks: [{time:3,label:'Set a reminder'},{time:16,label:'The whistle blows'}],
-    events: [
-      {time:3, end:16, role:'You', text:'When the referee blows the whistle, please remind me.'},
-      {time:16, end:20, role:'Scene event', text:'The referee blows the whistle.', kind:'event'},
-      {time:16, end:20, role:'Realtime-Venus', text:'The referee has blown the whistle! The game has started.'}
-    ],
-    note: 'The figure marks the reminder at 16 s; it does not report its speech duration. The walkthrough ends at 20 s for presentation.'
+    "note": "The model transcript is synchronized to the video from 30.00 to 34.28 s."
   },
   {
     id:'delegation', type:'walkthrough', model:'Realtime-Venus-Omni',
