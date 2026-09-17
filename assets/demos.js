@@ -7,9 +7,9 @@ window.VENUS_DEMOS = [
     "model": "Realtime-Venus-Omni",
     "category": "Proactive audio–visual perception",
     "title": "The microwave beeps. Realtime-Venus responds.",
-    "takeaway": "At 30 s, the model response identifies the microwave’s beep and explains that the heating cycle is complete.",
-    "summary": "Watch a microwave heating cycle alongside Realtime-Venus’s response when the cycle ends.",
-    "source": "Recorded scene · Synchronized model transcript.",
+    "takeaway": "At 30 s, Realtime-Venus identifies the microwave’s beep and explains that the heating cycle is complete.",
+    "summary": "Watch Realtime-Venus respond when the microwave finishes heating.",
+    "source": "Recorded video · Synchronized transcript.",
     "src": "./assets/demos/microwave.mp4",
     "poster": "./assets/demos/microwave-poster.jpg",
     "captions": "./assets/demos/microwave.en.vtt",
@@ -22,11 +22,11 @@ window.VENUS_DEMOS = [
       "time": 30,
       "label": "Watch the response"
     },
-    "opening": "Watch the microwave scene. The model reply appears at 30 s.",
+    "opening": "Watch the microwave scene, then hear the response at 30 s.",
     "phases": [
-      {"time": 0, "title": "Watch and listen", "detail": "Follow the recorded microwave scene before the reply.", "channels": ["listen"]},
-      {"time": 30, "title": "Realtime-Venus responds", "detail": "The reply identifies the sound and explains what it means.", "channels": ["listen", "speak"], "accent": "response"},
-      {"time": 34.28, "title": "The reply finishes", "detail": "The video continues after the model response.", "channels": ["listen"]}
+      {"time": 0, "title": "Watch and listen", "detail": "The microwave runs while Realtime-Venus watches and listens.", "channels": ["listen"]},
+      {"time": 30, "title": "Realtime-Venus responds", "detail": "Realtime-Venus identifies the beep and explains what it means.", "channels": ["listen", "speak"], "accent": "response"},
+      {"time": 34.28, "title": "The reply finishes", "detail": "The recording continues after Realtime-Venus finishes speaking.", "channels": ["listen"]}
     ],
     "marks": [{"time": 0, "label": "Watch the scene"}, {"time": 30, "label": "The response begins"}, {"time": 34.28, "label": "After the response"}],
     "events": [
@@ -37,7 +37,7 @@ window.VENUS_DEMOS = [
         "text": "The microwave just beeped — the heating cycle is complete."
       }
     ],
-    "note": "The state indicators are a playback guide. The model reply is synchronized to the recording."
+    "note": "Activity indicators guide playback. The transcript is synchronized with the recording."
   },
   {
     "id": "delegation",
@@ -47,9 +47,9 @@ window.VENUS_DEMOS = [
     "mediaLabel": "Video + dialogue",
     "category": "Asynchronous delegation",
     "title": "See the city. Find a flight.",
-    "summary": "Recognize Shanghai from the view, then hand off a flight search while the video continues.",
-    "takeaway": "After identifying Shanghai, the scene delegates a Beijing–Shanghai flight search. The spoken result returns at 24 s, with the city still in view.",
-    "source": "Video and dialogue clips aligned to the supplied storyboard.",
+    "summary": "See how a view of Shanghai leads to a delegated flight search while the video continues.",
+    "takeaway": "The demo follows a Beijing–Shanghai flight request from city recognition to delegation and a spoken result at 24 s. The video continues throughout.",
+    "source": "Video and speech clips assembled to illustrate delegation.",
     "src": "./assets/demos/shanghai-flights.mp4",
     "poster": "./assets/demos/shanghai-flights-poster.jpg",
     "captions": "./assets/demos/shanghai-flights.en.vtt",
@@ -76,14 +76,14 @@ window.VENUS_DEMOS = [
       {
         "time": 4,
         "title": "A view becomes a request",
-        "detail": "You ask where this is and request a flight from Beijing to that city.",
+        "detail": "You ask which city is in view and request a flight there from Beijing.",
         "channels": [
           "listen"
         ]
       },
       {
         "time": 10,
-        "title": "Identify the city. Acknowledge the task.",
+        "title": "The city is recognized",
         "detail": "Realtime-Venus names Shanghai and acknowledges the flight request.",
         "channels": [
           "listen",
@@ -93,7 +93,7 @@ window.VENUS_DEMOS = [
       {
         "time": 14.052333,
         "title": "The search runs. The scene continues.",
-        "detail": "The storyboard hands the Beijing–Shanghai flight search to the harness.",
+        "detail": "The storyboard shows the flight search being delegated to the harness.",
         "channels": [
           "listen",
           "delegate"
@@ -102,8 +102,8 @@ window.VENUS_DEMOS = [
       },
       {
         "time": 24,
-        "title": "The result rejoins the conversation",
-        "detail": "Realtime-Venus presents the flight options described in the demo.",
+        "title": "The result returns to the conversation",
+        "detail": "Realtime-Venus shares the example search results and recommends a flight.",
         "channels": [
           "listen",
           "speak"
@@ -168,8 +168,8 @@ window.VENUS_DEMOS = [
     "model": "Realtime-Venus-Audio",
     "category": "Full-duplex conversation",
     "title": "A new question. A new direction.",
-    "summary": "Listen to a road-trip conversation as a follow-up shifts the focus to daily breaks and meals.",
-    "takeaway": "Around 15 s, you ask a follow-up while the first answer is still playing. Realtime-Venus then responds about breaks and meals.",
+    "summary": "Hear a road-trip conversation shift from planning the route to arranging daily breaks and meals.",
+    "takeaway": "Around 15 s, you ask a follow-up while Realtime-Venus is still speaking. Its next response addresses breaks and meals.",
     "source": "Recorded stereo conversation · Synchronized transcript.",
     "src": "./assets/demos/road-trip.wav",
     "waveform": "./assets/demos/road-trip-waveform.svg",
@@ -184,14 +184,14 @@ window.VENUS_DEMOS = [
       {
         "time": 0,
         "title": "You set the task",
-        "detail": "A three-day road trip, with safe pacing.",
+        "detail": "You ask for a three-day road trip with safe pacing.",
         "channels": [
           "listen"
         ]
       },
       {
         "time": 3.5,
-        "title": "Speaking, still listening",
+        "title": "Speaking while listening",
         "detail": "Realtime-Venus asks about the starting city, region, and interests.",
         "channels": [
           "listen",
@@ -201,7 +201,7 @@ window.VENUS_DEMOS = [
       {
         "time": 15.1,
         "title": "A follow-up arrives",
-        "detail": "You ask about breaks and meals while the first response is still playing.",
+        "detail": "You ask about breaks and meals while Realtime-Venus is still speaking.",
         "channels": [
           "listen",
           "speak"
@@ -210,8 +210,8 @@ window.VENUS_DEMOS = [
       },
       {
         "time": 15.7,
-        "title": "Your question takes the floor",
-        "detail": "The first response ends as you finish the follow-up.",
+        "title": "Your follow-up continues",
+        "detail": "The first response ends while you continue your question.",
         "channels": [
           "listen"
         ],
@@ -219,7 +219,7 @@ window.VENUS_DEMOS = [
       },
       {
         "time": 18.3,
-        "title": "The answer follows your question",
+        "title": "Answering your follow-up",
         "detail": "Realtime-Venus discusses stops, meals, overnight stays, and extra time for delays.",
         "channels": [
           "listen",
@@ -277,6 +277,6 @@ window.VENUS_DEMOS = [
         "text": "For breaks and meals, we’ll include one major stop per day with lunch and a short visit. I’ll also include two overnight stays, one at each end of the route, plus a buffer for weather or traffic. Now, could you tell me where you’re starting from?"
       }
     ],
-    "note": "Original stereo recording. Dialogue follows the supplied transcript; cue times are approximate and aligned to the audio. State indicators are a playback guide."
+    "note": "Original stereo recording with the accompanying transcript. Dialogue cues are approximate and aligned with the audio. Activity indicators guide playback."
   }
 ];
