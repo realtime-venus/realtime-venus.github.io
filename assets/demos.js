@@ -63,7 +63,7 @@ window.VENUS_DEMOS = [
     "src": "./assets/demos/shanghai-flights.mp4",
     "playbackSrc": "./assets/demos/shanghai-flights.mp4?v=23",
     "poster": "./assets/demos/shanghai-flights-poster.jpg",
-    "captions": "./assets/demos/shanghai-flights.en.vtt",
+    "captions": "./assets/demos/shanghai-flights.en.vtt?v=26",
     "captionLabel": "English dialogue",
     "language": "en",
     "width": 1280,
@@ -168,7 +168,7 @@ window.VENUS_DEMOS = [
         "time": 24,
         "end": 33.926833,
         "role": "Realtime-Venus",
-        "text": "I found twelve flights. I’d recommend the three p.m. flight from Beijing Capital to Shanghai Hongqiao, arriving at five twenty p.m."
+        "text": "I found twelve flights. I’d recommend the 3:00 PM flight from Beijing Capital to Shanghai Hongqiao, arriving at 5:20 PM."
       }
     ],
     "note": "Assembled from the supplied video and speech clips. Delegation states follow the storyboard; they are not a live search or a latency measurement. Flight details are part of the demonstration."
