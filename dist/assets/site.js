@@ -39,37 +39,37 @@
   function stop() {
     playing = false; cancelAnimationFrame(animation); previous = null;
     panel.dataset.playing = 'false';
-    if (ui.video) ui.playRequest++;
-    ui.video?.pause();
+    if (ui.recording) ui.playRequest++;
+    ui.recording?.pause();
   }
-  function showVideoError(message) {
+  function showRecordingError(message) {
     ui.playError.replaceChildren(node('span', '', message + ' '));
-    const link = node('a', '', 'Open the video directly');
+    const link = node('a', '', current.type === 'audio' ? 'Open the audio directly' : 'Open the video directly');
     link.href = current.src; link.target = '_blank'; link.rel = 'noopener';
     ui.playError.append(link); ui.playError.hidden = false;
   }
-  function setVideoTime(value) {
+  function setRecordingTime(value) {
     time = Math.max(0, Math.min(current.duration, value));
-    if (ui.video.readyState < 1) ui.pendingSeek = time;
-    else { ui.pendingSeek = null; ui.video.currentTime = time; }
+    if (ui.recording.readyState < 1) ui.pendingSeek = time;
+    else { ui.pendingSeek = null; ui.recording.currentTime = time; }
   }
   function seek(value) {
     stop();
-    if (ui.video) setVideoTime(value); else time = value;
+    if (ui.recording) setRecordingTime(value); else time = value;
     update();
   }
   function start(value) {
-    if (ui.video) {
-      if (ui.video.error) { const resume = time; ui.video.load(); setVideoTime(resume); }
-      if (Number.isFinite(value)) setVideoTime(value);
-      else if (ui.video.ended || time >= current.duration) setVideoTime(0);
+    if (ui.recording) {
+      if (ui.recording.error) { const resume = time; ui.recording.load(); setRecordingTime(resume); }
+      if (Number.isFinite(value)) setRecordingTime(value);
+      else if (ui.recording.ended || time >= current.duration) setRecordingTime(0);
       const selectedUI = ui;
       const request = ++ui.playRequest;
       ui.playError.hidden = true;
-      ui.video.play()?.catch(error => {
+      ui.recording.play()?.catch(error => {
         if (ui !== selectedUI || request !== ui.playRequest || error.name === 'AbortError') return;
         playing = false; ui.buffering = false; update();
-        showVideoError('Playback could not start. Press Play scene to retry.');
+        showRecordingError('Playback could not start. Press Play scene to retry.');
       });
       return;
     }
@@ -79,7 +79,7 @@
     update(); animation = requestAnimationFrame(tick);
   }
   function toggle() {
-    if (ui.video ? !ui.video.paused : playing) { stop(); update(); } else start();
+    if (ui.recording ? !ui.recording.paused : playing) { stop(); update(); } else start();
   }
   function tick(now) {
     if (!playing) return;
@@ -97,11 +97,16 @@
     panel.dataset.complete = String(state.complete);
     ui.play.textContent = state.complete ? '↻ Replay scene' : playing ? 'Ⅱ Pause scene' : '▶ Play scene';
     ui.play.setAttribute('aria-pressed', String(playing));
-    ui.status.textContent = state.complete ? 'Complete' : ui.buffering && playing ? 'Loading video…' : playing ? 'Playing' : time === 0 ? 'Ready to play' : 'Paused';
+    if (ui.audioPlay) {
+      ui.audioPlay.textContent = state.complete ? '↻ Replay' : playing ? 'Ⅱ Pause' : '▶ Listen';
+      ui.audioPlay.setAttribute('aria-pressed', String(playing));
+    }
+    ui.status.textContent = state.complete ? 'Complete' : ui.buffering && playing ? 'Loading recording…' : playing ? 'Playing' : time === 0 ? 'Ready to play' : 'Paused';
     ui.counter.textContent = `${state.phaseIndex + 1} / ${current.phases.length}`;
     ui.scrubber.value = String(time);
     ui.scrubber.setAttribute('aria-valuetext', `${timestamp(time)} of ${timestamp(current.duration)}`);
     ui.time.textContent = `${timestamp(time)} / ${timestamp(current.duration)}`;
+    if (ui.waveCursor) ui.waveCursor.style.left = `${state.time / current.duration * 100}%`;
     if (ui.filmCursor) {
       const progress = reducedMotion.matches ? state.phase.time / current.filmstripDuration : state.filmProgress;
       ui.filmCursor.style.left = `${progress * 100}%`;
@@ -129,7 +134,7 @@
       el.classList.toggle('was-interrupted', !!event.interrupted && time >= event.end);
       if (active) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current');
       const interrupted = el.querySelector('.transcript-note');
-      if (interrupted) interrupted.hidden = time < event.end;
+      if (interrupted) interrupted.hidden = time < (event.noteAt ?? event.end);
     });
     const visibleKey = state.visible.join(',');
     if (visibleKey !== lastVisible) {
@@ -148,10 +153,10 @@
     current.events.forEach(event => {
       const item = node('li', 'transcript-item' + (event.role === 'Realtime-Venus' ? ' from-venus' : '') + (event.kind ? ' ' + event.kind : ''));
       const head = node('div', 'transcript-head');
-      const cueTime = current.type === 'video' ? `${cueTimestamp(event.time)}–${cueTimestamp(event.end)}` : timestamp(event.time);
+      const cueTime = current.type !== 'walkthrough' ? `${cueTimestamp(event.time)}–${cueTimestamp(event.end)}` : timestamp(event.time);
       head.append(node('strong', '', event.role), node('span', '', cueTime));
       item.append(head, node('p', '', event.text));
-      if (event.interrupted) item.append(node('span', 'transcript-note', 'Interrupted · Realtime-Venus yields to your follow-up'));
+      if (event.note || event.interrupted) item.append(node('span', 'transcript-note', event.note || 'Interrupted · Realtime-Venus yields to your follow-up'));
       list.append(item);
     });
     return list;
@@ -169,8 +174,9 @@
     return transcript;
   }
   function showScene() {
-    const isVideo = current.type === 'video';
-    const stage = node('div', 'scene-stage' + (isVideo ? ' scene-recording' : ''));
+    const isVideo = current.type === 'video', isAudio = current.type === 'audio';
+    const isRecorded = isVideo || isAudio;
+    const stage = node('div', 'scene-stage' + (isVideo ? ' scene-recording' : isAudio ? ' scene-audio' : ''));
     const header = node('div', 'scene-topline');
     ui.status = node('span', 'scene-status'); ui.counter = node('span', 'scene-counter');
     header.append(ui.status, ui.counter); stage.append(header);
@@ -178,7 +184,7 @@
     ui.heading = node('h4'); ui.detail = node('p'); phase.append(ui.heading, ui.detail); stage.append(phase);
     ui.announcement = node('p', 'sr-only'); ui.announcement.setAttribute('role', 'status'); ui.announcement.setAttribute('aria-live', 'polite');
     stage.append(ui.announcement);
-    if (isVideo) appendVideo(stage);
+    if (isRecorded) appendRecording(stage);
     if (current.filmstrip) {
       const film = node('div', 'scene-film');
       const label = node('div', 'scene-film-label'); label.append(node('span', '', 'Original paper frames'), node('span', '', 'Illustrated timeline'));
@@ -217,7 +223,7 @@
     const speedSelect = node('select');
     [1,1.5,2].forEach(rate => { const option = node('option', '', `${rate}×`); option.value = String(rate); speedSelect.append(option); });
     ui.speed = speedSelect;
-    speedSelect.value = String(speed); speedSelect.addEventListener('change', () => { speed = Number(speedSelect.value); previous = null; if (ui.video) ui.video.playbackRate = speed; }); speedLabel.append(speedSelect);
+    speedSelect.value = String(speed); speedSelect.addEventListener('change', () => { speed = Number(speedSelect.value); previous = null; if (ui.recording) ui.recording.playbackRate = speed; }); speedLabel.append(speedSelect);
     ui.scrubber = node('input', 'timeline-slider'); ui.scrubber.type = 'range'; ui.scrubber.min = '0'; ui.scrubber.max = String(current.duration); ui.scrubber.step = '.1'; ui.scrubber.setAttribute('aria-label', 'Scene timeline');
     ui.scrubber.addEventListener('input', () => seek(Number(ui.scrubber.value)));
     bar.append(ui.play, ui.time, speedLabel, ui.scrubber); controls.append(bar);
@@ -231,31 +237,36 @@
       panel.focus({preventScroll: true});
     });
     chapters.append(ui.next); controls.append(chapters);
-    if (isVideo) appendVideoTools();
+    if (isRecorded) appendRecordingTools();
     ui.transcript = appendTranscript();
     update();
   }
-  function appendVideo(stage) {
-    const recording = current, selectedUI = ui;
-    const frame = node('div', 'scene-film scene-video');
+  function appendRecording(stage) {
+    const recording = current, selectedUI = ui, isVideo = current.type === 'video';
+    const frame = node('div', 'scene-film ' + (isVideo ? 'scene-video' : 'scene-audio-wave'));
     const label = node('div', 'scene-film-label');
-    label.append(node('span', '', 'Recorded scene'), node('span', '', 'Audio + video'));
-    const video = node('video', 'recorded-demo');
-    ui.video = video; ui.pendingSeek = null; ui.buffering = false; ui.playRequest = 0;
-    video.controls = false; video.playsInline = true; video.preload = 'metadata'; video.src = current.src;
-    video.playbackRate = speed; video.setAttribute('aria-label', current.title);
-    if (current.width && current.height) { video.width = current.width; video.height = current.height; video.style.aspectRatio = `${current.width} / ${current.height}`; }
-    if (current.poster) video.poster = current.poster;
+    label.append(node('span', '', isVideo ? 'Recorded scene' : 'Recorded stereo conversation'));
+    if (isVideo) label.append(node('span', '', 'Audio + video'));
+    else {
+      ui.audioPlay = button('scene-start scene-audio-play', '▶ Listen', toggle);
+      label.append(ui.audioPlay);
+    }
+    const player = node(isVideo ? 'video' : 'audio', isVideo ? 'recorded-demo' : 'recorded-audio');
+    ui.recording = player; ui.pendingSeek = null; ui.buffering = false; ui.playRequest = 0;
+    player.controls = false; player.playsInline = true; player.preload = 'metadata'; player.src = current.src;
+    player.playbackRate = speed; player.setAttribute('aria-label', current.title);
+    if (current.width && current.height) { player.width = current.width; player.height = current.height; player.style.aspectRatio = `${current.width} / ${current.height}`; }
+    if (current.poster) player.poster = current.poster;
     if (current.captions) {
       const track = node('track'); track.kind = 'subtitles'; track.src = current.captions;
       track.srclang = current.language || 'en'; track.label = 'Model response (English)'; track.default = true;
-      video.append(track); ui.captionTrack = track;
+      player.append(track); ui.captionTrack = track;
     }
-    video.append(node('p', '', 'Your browser does not support this video.'));
+    player.append(node('p', '', 'Your browser does not support this recording.'));
     const sync = () => {
       if (ui !== selectedUI) return;
-      time = ui.pendingSeek ?? (Number.isFinite(video.currentTime) ? video.currentTime : 0);
-      playing = !video.paused && !video.ended;
+      time = ui.pendingSeek ?? (Number.isFinite(player.currentTime) ? player.currentTime : 0);
+      playing = !player.paused && !player.ended;
       update();
       if (ui.transcript) recording.events.forEach((event, i) => {
         const item = ui.transcript.children[i], active = time >= event.time && time < event.end;
@@ -263,70 +274,84 @@
         if (active) item.setAttribute('aria-current', 'step'); else item.removeAttribute('aria-current');
       });
     };
-    ['timeupdate', 'seeked', 'play', 'pause', 'ended'].forEach(event => video.addEventListener(event, sync));
-    video.addEventListener('loadedmetadata', () => {
+    ['timeupdate', 'seeked', 'play', 'pause', 'ended'].forEach(event => player.addEventListener(event, sync));
+    player.addEventListener('loadedmetadata', () => {
       if (ui !== selectedUI) return;
-      if (Number.isFinite(video.duration) && video.duration > 0) { current.duration = video.duration; ui.scrubber.max = String(video.duration); }
-      if (ui.pendingSeek !== null) setVideoTime(ui.pendingSeek);
+      if (Number.isFinite(player.duration) && player.duration > 0) { current.duration = player.duration; ui.scrubber.max = String(player.duration); }
+      if (ui.pendingSeek !== null) setRecordingTime(ui.pendingSeek);
       sync();
     });
-    video.addEventListener('waiting', () => { if (ui === selectedUI) { ui.buffering = true; sync(); } });
-    ['playing', 'canplay'].forEach(event => video.addEventListener(event, () => { if (ui === selectedUI) { ui.buffering = false; sync(); } }));
-    video.addEventListener('ratechange', () => { if (ui === selectedUI) { speed = video.playbackRate; ui.speed.value = String(speed); } });
-    video.addEventListener('error', () => {
+    player.addEventListener('waiting', () => { if (ui === selectedUI) { ui.buffering = true; sync(); } });
+    ['playing', 'canplay'].forEach(event => player.addEventListener(event, () => { if (ui === selectedUI) { ui.buffering = false; sync(); } }));
+    player.addEventListener('ratechange', () => { if (ui === selectedUI) { speed = player.playbackRate; ui.speed.value = String(speed); } });
+    player.addEventListener('error', () => {
       if (ui !== selectedUI) return;
       ui.playRequest++;
       playing = false; ui.buffering = false; update();
-      showVideoError('The recording could not be loaded.');
+      showRecordingError('The recording could not be loaded.');
     });
-    frame.append(label, video); stage.append(frame);
+    frame.append(label, player);
+    if (!isVideo && current.waveform) {
+      const wave = node('div', 'scene-waveform');
+      const image = node('img'); image.src = current.waveform; image.width = 720; image.height = 104;
+      image.alt = 'Stereo waveform: your voice above, Realtime-Venus below.';
+      ui.waveCursor = node('span', 'film-cursor'); ui.waveCursor.setAttribute('aria-hidden', 'true');
+      wave.append(image, ui.waveCursor); frame.append(wave);
+      const legend = node('div', 'scene-film-axis');
+      legend.append(node('span', '', 'You · top'), node('span', '', 'Realtime-Venus · bottom'));
+      frame.append(legend);
+    }
+    stage.append(frame);
   }
-  function appendVideoTools() {
-    const video = ui.video, selectedUI = ui;
-    const tools = node('div', 'video-tools'); tools.setAttribute('aria-label', 'Video sound and display controls');
-    const mute = button('video-tool', 'Mute', () => {
-      if (video.muted || video.volume === 0) { video.muted = false; if (video.volume === 0) video.volume = 1; }
-      else video.muted = true;
+  function appendRecordingTools() {
+    const player = ui.recording, selectedUI = ui, isVideo = current.type === 'video';
+    const tools = node('div', 'media-tools'); tools.setAttribute('aria-label', isVideo ? 'Video sound and display controls' : 'Audio volume controls');
+    const mute = button('media-tool', 'Mute', () => {
+      if (player.muted || player.volume === 0) { player.muted = false; if (player.volume === 0) player.volume = 1; }
+      else player.muted = true;
     });
     mute.setAttribute('aria-pressed', 'false');
-    const volumeLabel = node('label', 'video-volume');
-    volumeLabel.append(node('span', 'sr-only', 'Video volume'));
+    const volumeLabel = node('label', 'media-volume');
+    volumeLabel.append(node('span', 'sr-only', 'Recording volume'));
     const volume = node('input'); volume.type = 'range'; volume.min = '0'; volume.max = '1'; volume.step = '.05'; volume.value = '1';
-    volume.setAttribute('aria-label', 'Video volume');
-    volume.addEventListener('input', () => { video.volume = Number(volume.value); video.muted = video.volume === 0; });
+    volume.setAttribute('aria-label', 'Recording volume');
+    volume.addEventListener('input', () => { player.volume = Number(volume.value); player.muted = player.volume === 0; });
     volumeLabel.append(volume);
-    video.addEventListener('volumechange', () => {
-      const muted = video.muted || video.volume === 0;
-      mute.textContent = muted ? 'Unmute' : 'Mute'; mute.setAttribute('aria-pressed', String(muted)); volume.value = String(muted ? 0 : video.volume);
+    player.addEventListener('volumechange', () => {
+      const muted = player.muted || player.volume === 0;
+      mute.textContent = muted ? 'Unmute' : 'Mute'; mute.setAttribute('aria-pressed', String(muted)); volume.value = String(muted ? 0 : player.volume);
     });
     tools.append(mute, volumeLabel);
     if (ui.captionTrack) {
       const captionTrack = ui.captionTrack;
       const applyCaptions = () => { if (captionTrack.track) captionTrack.track.mode = captions.getAttribute('aria-pressed') === 'true' ? 'showing' : 'disabled'; };
-      const captions = button('video-tool', 'Captions', () => {
+      const captions = button('media-tool', 'Captions', () => {
         const enabled = captions.getAttribute('aria-pressed') !== 'true';
         captions.setAttribute('aria-pressed', String(enabled));
         applyCaptions();
       });
       captionTrack.addEventListener('load', applyCaptions);
-      video.textTracks?.addEventListener('change', () => {
+      player.textTracks?.addEventListener('change', () => {
         if (captionTrack.track) captions.setAttribute('aria-pressed', String(captionTrack.track.mode === 'showing'));
       });
       captions.setAttribute('aria-pressed', 'true'); tools.append(captions);
     }
-    const fullscreen = button('video-tool', 'Full screen', () => {
-      video.controls = true;
-      try {
-        if (video.requestFullscreen) video.requestFullscreen()?.catch(() => { video.controls = false; });
-        else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
-      } catch { video.controls = false; }
-    });
-    fullscreen.hidden = !video.requestFullscreen && !video.webkitEnterFullscreen;
-    const restoreControls = () => { if (ui === selectedUI && !document.fullscreenElement && !video.webkitDisplayingFullscreen) video.controls = false; };
-    video.addEventListener('fullscreenchange', restoreControls);
-    video.addEventListener('webkitendfullscreen', restoreControls);
-    tools.append(fullscreen); controls.append(tools);
-    ui.playError = node('p', 'video-error'); ui.playError.setAttribute('role', 'status'); ui.playError.hidden = true;
+    if (isVideo) {
+      const fullscreen = button('media-tool', 'Full screen', () => {
+        player.controls = true;
+        try {
+          if (player.requestFullscreen) player.requestFullscreen()?.catch(() => { player.controls = false; });
+          else if (player.webkitEnterFullscreen) player.webkitEnterFullscreen();
+        } catch { player.controls = false; }
+      });
+      fullscreen.hidden = !player.requestFullscreen && !player.webkitEnterFullscreen;
+      const restoreControls = () => { if (ui === selectedUI && !document.fullscreenElement && !player.webkitDisplayingFullscreen) player.controls = false; };
+      player.addEventListener('fullscreenchange', restoreControls);
+      player.addEventListener('webkitendfullscreen', restoreControls);
+      tools.append(fullscreen);
+    }
+    controls.append(tools);
+    ui.playError = node('p', 'media-error'); ui.playError.setAttribute('role', 'status'); ui.playError.hidden = true;
     controls.append(ui.playError);
   }
   function select(id, focus = false) {
@@ -338,7 +363,7 @@
     tabs.forEach(tab => { const active = tab.dataset.demo === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; if (active && focus) tab.focus(); });
     panel.setAttribute('aria-labelledby', 'tab-' + id);
     document.getElementById('demo-model').textContent = current.model;
-    document.getElementById('demo-format').textContent = current.type === 'video' ? 'Recorded demo' : 'Animated research example';
+    document.getElementById('demo-format').textContent = current.type === 'audio' ? 'Recorded audio demo' : current.type === 'video' ? 'Recorded demo' : 'Animated research example';
     document.getElementById('demo-category').textContent = current.category;
     document.getElementById('demo-title').textContent = current.title;
     document.getElementById('demo-summary').textContent = current.summary;

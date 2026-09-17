@@ -6,15 +6,15 @@ Project website for **Realtime-Venus: A full-duplex interaction system with asyn
 
 ## Website content
 
-A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. Two animated paper-example scenes reveal dialogue at each event and show the listening, speaking and delegation state. The second card plays a recorded microwave scene with its synchronized model transcript and English subtitles. All three scenes share the phase header, activity indicators, blue response bubbles and playback controls. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. The recording also provides volume, captions and full-screen controls; its native media clock drives the shared interface. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
+A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. The first card plays a real stereo road-trip conversation with synchronized dialogue and a waveform measured from its two audio channels. The second card plays a recorded microwave scene with its synchronized model transcript and English subtitles. The third card illustrates the paper’s delegation example. All three scenes share the phase header, activity indicators, blue response bubbles and playback controls. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. Both recordings provide volume controls and use their native media clocks to drive the interface; the video also provides captions and full-screen controls. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
 
 The method explains how the harness prepares a delegated reply and the frontend chooses speech timing, with the revised harness diagram and a concise description of the shared post-training recipe.
 
-The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation; the animated examples also link to their source figures. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
+The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation; the animated delegation example also links to its source figure. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
 
-Scenes 01 and 03 are **illustrations reconstructed from Figure 4**, not real model recordings or a live service. Scene 02 uses the supplied `test2_microwave.mp4` and the reply in `test2_microwave_io.jsonl`. The MP4 is 45 seconds; the log’s `played` interval, 30–34.28 seconds, supplies the transcript and subtitle timing. The generation interval is not used as subtitle timing. Only the model dialogue is published; internal paths and run metadata are omitted. Research scores remain from the September 9, 2026 manuscript. The delegation transcript is translated from Chinese and its example traffic information is not current guidance.
+Scene 01 uses the supplied `case_stereo.wav` and `audio_demo.txt`. The original 37-second stereo PCM recording is preserved without re-encoding. Approximate dialogue cues are aligned to channel activity at 0, 3.5, 15.1 and 18.3 seconds; the first reply continues briefly after the follow-up starts, and the recording retains its silent tail. These cues are not response-latency measurements. Scene 03 is an **illustration reconstructed from Figure 4**, not a real model recording or a live service. Scene 02 uses the supplied `test2_microwave.mp4` and the reply in `test2_microwave_io.jsonl`. The MP4 is 45 seconds; the log’s `played` interval, 30–34.28 seconds, supplies the transcript and subtitle timing. The generation interval is not used as subtitle timing. Only the model dialogue is published; internal paths and run metadata are omitted. Research scores remain from the September 9, 2026 manuscript. The delegation transcript is translated from Chinese and its example traffic information is not current guidance.
 
-The filmstrip cursor uses the original figure’s 0–40 s axis, independently of the shorter authored playback endpoints. Dialogue appears as complete messages at the reported events; no word-level speech timing or generated audio is implied. Playback starts only on visitor action. Reduced-motion preferences disable message entrances and activity motion, and make the filmstrip cursor step between phases.
+The filmstrip cursor uses the original figure’s 0–40 s axis, independently of the shorter authored playback endpoints. Dialogue appears as complete messages at the reported events; no word-level speech timing is implied; Scene 03 has no recorded audio. Playback starts only on visitor action. Reduced-motion preferences disable message entrances and activity motion, and make the filmstrip cursor step between phases.
 
 ## Local preview
 
@@ -28,7 +28,7 @@ Run the timeline regression checks with `node --test tests/demo-timeline.test.cj
 
 ## Add recorded demos
 
-Edit `dist/assets/demos.js`. For an existing scene, set `type` to `video` and add a direct video URL or a path to a file inside `dist/`. Native video playback drives the shared, keyboard-accessible controls and never autoplays. Update the scene title, summary, source, duration, opening, phases, chapter marks and timed events to describe the real recording. Activity indicators illustrate the scene rather than reporting live model telemetry. Use a preview server with byte-range support to check video seeking.
+Edit `dist/assets/demos.js`. For an existing scene, set `type` to `audio` or `video` and add a direct media URL or a path to a file inside `dist/`. Native media playback drives the shared, keyboard-accessible controls and never autoplays. Update the scene title, summary, source, duration, opening, phases, chapter marks and timed events to describe the real recording. Activity indicators illustrate the scene rather than reporting live model telemetry. Use a preview server with byte-range support to check recording seeking.
 
 ```js
 {
@@ -51,6 +51,8 @@ Edit `dist/assets/demos.js`. For an existing scene, set `type` to `video` and ad
 - `dist/assets/site.js`: walkthroughs, video playback and citation copying.
 - `dist/assets/demos.js`: demo content and media settings.
 - `dist/assets/demo-engine.js`: shared, deterministic timeline state for animation and navigation.
+- `dist/assets/demos/road-trip.wav`: original stereo road-trip recording.
+- `dist/assets/demos/road-trip-waveform.svg`: measured two-channel amplitude envelope.
 - `dist/assets/demos/microwave.mp4`: supplied recording, remuxed for fast-start playback without re-encoding.
 - `dist/assets/demos/microwave-poster.jpg`: cover frame extracted from the recording.
 - `dist/assets/demos/microwave.en.vtt`: English model-response subtitles aligned to the JSONL playback interval.
@@ -66,7 +68,7 @@ The interface uses white, pale blue-gray and brand-tinted surfaces. The `#1677FF
 
 Inter is bundled from the [official Inter distribution](https://rsms.me/inter/) with its SIL Open Font License in `dist/assets/fonts/OFL.txt`. It is served locally; visitors do not need to contact an external font provider. The layout uses 400, 500 and 600 weights, a 16 px body size, and a 13 px minimum for supporting labels. Heading sizes adapt to viewport width. Code uses a system monospace face; metrics and timestamps use tabular numerals.
 
-Use sentence case for headings and interface labels. Preserve official names (`Realtime-Venus-Omni`, `Realtime-Venus-Audio`, `Realtime-Venus-Harness`), benchmark names and acronyms. Use `BibTeX`, `Figure 4` and `13 s` rather than all-caps labels or zero-padded figure numbers. Keep dynamic demo labels consistent with the initial HTML.
+Use sentence case for headings and interface labels. Preserve official names (`Realtime-Venus-Omni`, `Realtime-Venus-Audio`, `Realtime-Venus-Harness`), benchmark names and acronyms. Use `BibTeX`, `Figure 4` and `15 s` rather than all-caps labels or zero-padded figure numbers. Keep dynamic demo labels consistent with the initial HTML.
 
 ## Presentation references
 

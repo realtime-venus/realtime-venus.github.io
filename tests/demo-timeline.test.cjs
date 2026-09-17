@@ -40,21 +40,32 @@ test('The recorded scene reveals its reply only during the playback interval and
   assert.deepEqual(frame('proactive',0).visible,[]);
   assert.equal(frame('proactive',0).complete,false);
 });
-test('An interruption stops the original response before the new answer', () => {
-  assert.deepEqual(frame('interruption',12.9).channels,['listen','speak']);
-  assert.deepEqual(frame('interruption',13).channels,['listen']);
-  assert.deepEqual(frame('interruption',13).active,[2]);
-  assert.deepEqual(frame('interruption',15).channels,['listen','speak']);
-  assert.deepEqual(frame('interruption',15).active,[3]);
+test('The stereo recording preserves overlap and follows the new dialogue cues', () => {
+  const recording=scenes.interruption;
+  assert.equal(recording.type,'audio');assert.equal(recording.duration,37);
+  assert.ok(fs.existsSync(path.join(__dirname,'../dist',recording.src)));
+  assert.ok(fs.existsSync(path.join(__dirname,'../dist',recording.waveform)));
+  assert.deepEqual(frame('interruption',0).active,[0]);
+  assert.deepEqual(frame('interruption',3.5).active,[1]);
+  assert.deepEqual(frame('interruption',15.1).channels,['listen','speak']);
+  assert.deepEqual(frame('interruption',15.1).active,[1,2]);
+  assert.deepEqual(frame('interruption',15.7).channels,['listen']);
+  assert.deepEqual(frame('interruption',17).active,[2]);
+  assert.deepEqual(frame('interruption',18.3).active,[3]);
+  assert.deepEqual(frame('interruption',35.52).active,[]);
+  assert.deepEqual(frame('interruption',35.52).channels,[]);
+  assert.equal(frame('interruption',36).complete,false);
+  assert.match(recording.events[1].text,/starting city/);
+  assert.match(recording.events[3].text,/overnight stays/);
 });
 test('Film position follows the paper’s 40 s axis, not the playback endpoint', () => {
   assert.equal(frame('delegation',20).filmProgress,.5);
 });
 test('Rewinding hides future dialogue and completion does not stick', () => {
-  assert.equal(frame('interruption',30).complete,true);
+  assert.equal(frame('interruption',37).complete,true);
   assert.equal(frame('interruption',13).complete,false);
-  assert.deepEqual(frame('interruption',13).visible,[0,1,2]);
-  assert.deepEqual(frame('interruption',0).visible,[]);
+  assert.deepEqual(frame('interruption',15.1).visible,[0,1,2]);
+  assert.deepEqual(frame('interruption',0).visible,[0]);
 });
 test('Out-of-range positions clamp and a completed scene has no active channels', () => {
   assert.equal(frame('delegation',-5).time,0);
