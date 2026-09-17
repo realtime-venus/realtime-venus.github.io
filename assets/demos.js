@@ -20,7 +20,7 @@ window.VENUS_DEMOS = [
     "input": "Audio + video input",
     "spotlight": {
       "time": 30,
-      "label": "Watch the response · 30 s"
+      "label": "Watch the response"
     },
     "opening": "Watch the microwave scene. The model reply appears at 30 s.",
     "phases": [
@@ -37,7 +37,7 @@ window.VENUS_DEMOS = [
         "text": "The microwave just beeped — the heating cycle is complete."
       }
     ],
-    "note": "The state indicators are a playback guide. The model reply follows the recorded 30.00–34.28 s interval."
+    "note": "The state indicators are a playback guide. The model reply is synchronized to the recording."
   },
   {
     id:'delegation', type:'walkthrough', model:'Realtime-Venus-Omni',
@@ -49,7 +49,7 @@ window.VENUS_DEMOS = [
     filmstripAlt:'Original driving-scene frames from the manuscript example.',
     duration:22,input:'Audio + video input',filmstripDuration:40,
     opening:'You are on the road. Ask Realtime-Venus to check the day’s driving restrictions.',
-    spotlight:{time:10,label:'Watch the lookup · 10 s'},
+    spotlight:{time:10,label:'Watch the lookup'},
     phases:[
       {time:0,title:'Follow the road',detail:'The audio–visual context stays available.',channels:['listen']},
       {time:3,title:'You ask. Realtime-Venus listens.',detail:'A question needs information from an external service.',channels:['listen']},
@@ -82,7 +82,7 @@ window.VENUS_DEMOS = [
     "opening": "Plan a three-day road trip, then ask about daily breaks and meals.",
     "spotlight": {
       "time": 15.1,
-      "label": "Hear the follow-up · 15 s"
+      "label": "Hear the follow-up"
     },
     "phases": [
       {
