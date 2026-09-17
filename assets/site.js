@@ -175,7 +175,9 @@
   function showScene() {
     const isVideo = current.type === 'video', isAudio = current.type === 'audio';
     const isRecorded = isVideo || isAudio;
+    const hasScrollableDialogue = !isVideo || current.events.length > 1;
     const stage = node('div', 'scene-stage' + (isVideo ? ' scene-recording' : isAudio ? ' scene-audio' : ''));
+    if (isVideo && hasScrollableDialogue) stage.classList.add('scene-dialogue');
     const header = node('div', 'scene-topline');
     ui.status = node('span', 'scene-status'); ui.counter = node('span', 'scene-counter');
     header.append(ui.status, ui.counter); stage.append(header);
@@ -208,8 +210,8 @@
     stage.append(channelBox);
     ui.viewport = node('div', 'scene-conversation');
     ui.viewport.setAttribute('role', 'region');
-    ui.viewport.setAttribute('aria-label', isVideo ? 'Model response in the recorded scene' : 'Scene conversation. Scroll to review earlier messages.');
-    if (!isVideo) ui.viewport.tabIndex = 0;
+    ui.viewport.setAttribute('aria-label', hasScrollableDialogue ? 'Scene conversation. Scroll to review earlier messages.' : 'Model response in the recorded scene');
+    if (hasScrollableDialogue) ui.viewport.tabIndex = 0;
     ui.empty = node('div', 'scene-opening');
     ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening));
     if (!isVideo) ui.empty.append(button('scene-start', '▶ Play this scene', () => start()));
@@ -248,7 +250,7 @@
     const recording = current, selectedUI = ui, isVideo = current.type === 'video';
     const frame = node('div', 'scene-film ' + (isVideo ? 'scene-video' : 'scene-audio-wave'));
     const label = node('div', 'scene-film-label');
-    label.append(node('span', '', isVideo ? 'Recorded scene' : 'Recorded stereo conversation'));
+    label.append(node('span', '', current.mediaLabel || (isVideo ? 'Recorded scene' : 'Recorded stereo conversation')));
     if (isVideo) label.append(node('span', '', 'Audio + video'));
     else {
       ui.audioPlay = button('scene-start scene-audio-play', '▶ Listen', toggle);
@@ -262,7 +264,7 @@
     if (current.poster) player.poster = current.poster;
     if (current.captions) {
       const track = node('track'); track.kind = 'subtitles'; track.src = current.captions;
-      track.srclang = current.language || 'en'; track.label = 'Model response (English)'; track.default = true;
+      track.srclang = current.language || 'en'; track.label = current.captionLabel || 'Model response (English)'; track.default = true;
       player.append(track); ui.captionTrack = track;
     }
     player.append(node('p', '', 'Your browser does not support this recording.'));
@@ -366,7 +368,7 @@
     tabs.forEach(tab => { const active = tab.dataset.demo === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; if (active && focus) tab.focus(); });
     panel.setAttribute('aria-labelledby', 'tab-' + id);
     document.getElementById('demo-model').textContent = current.model;
-    document.getElementById('demo-format').textContent = current.type === 'audio' ? 'Recorded audio demo' : current.type === 'video' ? 'Recorded demo' : 'Animated research example';
+    document.getElementById('demo-format').textContent = current.format || (current.type === 'audio' ? 'Recorded audio demo' : current.type === 'video' ? 'Recorded demo' : 'Animated research example');
     document.getElementById('demo-category').textContent = current.category;
     document.getElementById('demo-title').textContent = current.title;
     document.getElementById('demo-summary').textContent = current.summary;
