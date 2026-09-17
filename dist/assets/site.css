@@ -139,8 +139,9 @@ nav a:last-child { color: var(--accent); }
 .transcript-item.is-active { color: var(--ink); border-color: var(--blue-line); background: var(--blue-soft); box-shadow: inset 3px 0 0 var(--brand); }
 .transcript-item.event { border-style: dashed; background: var(--blue-soft); }
 .transcript-item.interruption.is-active { border-color: var(--blue-line); background: var(--paper); box-shadow: inset 3px 0 0 var(--brand); }
-.transcript-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: var(--type-caption); }
-.transcript-head > span { font-variant-numeric: tabular-nums; }
+.transcript-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .25rem .75rem; color: var(--muted); font-size: var(--type-caption); }
+.transcript-head > strong { min-width: 0; overflow-wrap: anywhere; }
+.transcript-head > span { margin-left: auto; flex-shrink: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .transcript-item p { font-size: .9375rem; line-height: 1.6; margin-top: .35rem; }
 .transcript-note { display: block; font-size: var(--type-caption); color: var(--rose); margin-top: .35rem; }
 .audio-lanes { display: grid; gap: .7rem; }
@@ -154,7 +155,8 @@ nav a:last-child { color: var(--accent); }
 .timeline-slider { flex: 1; min-width: 40px; accent-color: var(--accent); cursor: pointer; height: 32px; }
 .playback-time { color: var(--muted); font-size: var(--type-caption); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .walkthrough-chapters { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0 0 .5rem; }
-.walkthrough-chapters button { font-size: var(--type-caption); border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: var(--paper); min-height: 36px; padding: .35rem .7rem; }
+.walkthrough-chapters button { display: inline-flex; align-items: baseline; gap: .55rem; max-width: 100%; text-align: left; font-size: var(--type-caption); border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: var(--paper); min-height: 36px; padding: .35rem .7rem; }
+.chapter-time { flex-shrink: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .walkthrough-chapters button:hover { background: var(--blue-soft); border-color: var(--blue-line); color: var(--accent); }
 .playback-note { font-size: var(--type-caption); color: var(--muted); line-height: 1.65; margin-top: .5rem; padding: 0; }
 .recorded-demo { display: block; width: 100%; height: auto; max-height: 650px; aspect-ratio: 16/9; background: #edf2f8; border-radius: 7px; }
@@ -168,7 +170,7 @@ nav a:last-child { color: var(--accent); }
 
 /* A shared scene player for recordings and manuscript examples. */
 [hidden] { display: none !important; }
-.scene-spotlight { display: block; width: 100%; text-align: left; margin-top: 1.4rem; padding: .75rem 1rem; min-height: 48px; border: 1px solid var(--blue-line); border-radius: 7px; color: var(--accent); background: var(--paper); font-size: var(--type-small); font-weight: 600; line-height: 1.5; }
+.scene-spotlight { display: block; width: 100%; text-align: left; margin-top: 1.4rem; padding: .75rem 1rem; min-height: 48px; border: 1px solid var(--blue-line); border-radius: 7px; color: var(--accent); background: var(--paper); font-size: var(--type-small); font-weight: 600; line-height: 1.5; font-variant-numeric: tabular-nums; }
 .scene-spotlight:hover { background: var(--blue-soft); border-color: var(--brand); }
 .scene-stage { --scene-accent: var(--ink); background: var(--paper); border: 0; border-radius: 0; overflow: hidden; box-shadow: none; }
 .demo-panel[data-accent="interruption"] .scene-stage { --scene-accent: var(--ink); border-color: transparent; }

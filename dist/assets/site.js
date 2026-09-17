@@ -26,7 +26,6 @@
   let current, time = 0, playing = false, animation = 0, previous = null, speed = 1;
   let ui = {}, lastPhase = '', lastVisible = '';
   const timestamp = value => `${String(Math.floor(value / 60)).padStart(2, '0')}:${String(Math.floor(value % 60)).padStart(2, '0')}`;
-  const cueTimestamp = value => timestamp(value) + (Number.isInteger(value) ? '' : (value % 1).toFixed(2).slice(1));
   function node(tag, className, text) {
     const el = document.createElement(tag);
     if (className) el.className = className;
@@ -153,7 +152,7 @@
     current.events.forEach(event => {
       const item = node('li', 'transcript-item' + (event.role === 'Realtime-Venus' ? ' from-venus' : '') + (event.kind ? ' ' + event.kind : ''));
       const head = node('div', 'transcript-head');
-      const cueTime = current.type !== 'walkthrough' ? `${cueTimestamp(event.time)}–${cueTimestamp(event.end)}` : timestamp(event.time);
+      const cueTime = `${timestamp(event.time)}–${timestamp(event.end)}`;
       head.append(node('strong', '', event.role), node('span', '', cueTime));
       item.append(head, node('p', '', event.text));
       if (event.note || event.interrupted) item.append(node('span', 'transcript-note', event.note || 'Interrupted · Realtime-Venus yields to your follow-up'));
@@ -193,7 +192,7 @@
       ui.filmCursor = node('span', 'film-cursor'); ui.filmCursor.setAttribute('aria-hidden', 'true');
       frame.append(strip, ui.filmCursor);
       const axis = node('div', 'scene-film-axis'); axis.setAttribute('aria-hidden', 'true');
-      [0,10,20,30,40].forEach(t => axis.append(node('span', '', `${t} s`)));
+      [0,10,20,30,40].forEach(t => axis.append(node('span', '', timestamp(t))));
       film.append(label, frame, axis); stage.append(film);
     }
     const channelBox = node('div', 'scene-channels');
@@ -230,7 +229,10 @@
     bar.append(ui.play, ui.time, speedLabel, ui.scrubber); controls.append(bar);
     const chapters = node('div', 'walkthrough-chapters'); chapters.setAttribute('aria-label', 'Jump to a scene chapter');
     ui.chapters = current.marks.map(mark => {
-      const el = button('', `${mark.time} s · ${mark.label}`, () => seek(mark.time)); chapters.append(el); return el;
+      const el = button('', '', () => seek(mark.time));
+      el.setAttribute('aria-label', `${timestamp(mark.time)}, ${mark.label}`);
+      el.append(node('span', 'chapter-time', timestamp(mark.time)), node('span', '', mark.label));
+      chapters.append(el); return el;
     });
     ui.next = button('scene-next', 'Next scene →', () => {
       const index = demos.findIndex(demo => demo.id === current.id);
@@ -373,7 +375,7 @@
     const figureLink = document.getElementById('demo-figure-link'); figureLink.hidden = !current.figure;
     if (current.figure) figureLink.href = current.figure;
     spotlight.hidden = !current.spotlight;
-    if (!spotlight.hidden) spotlight.textContent = current.spotlight.label + ' ↗';
+    if (!spotlight.hidden) spotlight.textContent = `${timestamp(current.spotlight.time)} · ${current.spotlight.label} ↗`;
     showScene();
   }
   spotlight.addEventListener('click', () => {
