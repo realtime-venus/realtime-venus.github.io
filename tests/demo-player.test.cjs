@@ -201,7 +201,7 @@ test('The Sites mirror uses the verified range-capable media origin with CORS ca
   assert.equal(p.players[0].crossOrigin, 'anonymous');
   p.$('#tab-proactive').click();
   assert.equal(p.$('video').src, 'https://realtime-venus.github.io/assets/demos/microwave.mp4?v=23');
-  assert.equal(p.$('track').src, 'https://realtime-venus.github.io/assets/demos/microwave.en.vtt?v=25');
+  assert.equal(p.$('track').src, 'https://realtime-venus.github.io/assets/demos/microwave.en.vtt?v=27');
   assert.equal(setup({hostname: 'realtime-venus.github.io'}).players[0].src, './assets/demos/road-trip.m4a');
 });
 

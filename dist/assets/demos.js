@@ -13,7 +13,7 @@ window.VENUS_DEMOS = [
     "src": "./assets/demos/microwave.mp4",
     "playbackSrc": "./assets/demos/microwave.mp4?v=23",
     "poster": "./assets/demos/microwave-poster.jpg",
-    "captions": "./assets/demos/microwave.en.vtt?v=25",
+    "captions": "./assets/demos/microwave.en.vtt?v=27",
     "captionLabel": "English dialogue",
     "language": "en",
     "duration": 45,
@@ -37,8 +37,7 @@ window.VENUS_DEMOS = [
         "time": 1.74,
         "end": 4.64,
         "role": "You",
-        "text": "Let me know when the microwave beeps the signal is done.",
-        "note": "Automatic transcription"
+        "text": "Let me know when the microwave beeps to signal it's done."
       },
       {
         "time": 30,
@@ -47,7 +46,7 @@ window.VENUS_DEMOS = [
         "text": "The microwave just beeped — the heating cycle is complete."
       }
     ],
-    "note": "The opening request is automatically transcribed from the video; words near the end are less clear. Its timing is approximate. The model reply follows the supplied transcript and recorded playback interval. Activity indicators guide playback."
+    "note": "The opening request uses approximate speech-aligned timing. The model reply follows the supplied transcript and recorded playback interval. Activity indicators guide playback."
   },
   {
     "id": "delegation",
