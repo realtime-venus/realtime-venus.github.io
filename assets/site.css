@@ -84,8 +84,12 @@ nav a:last-child { color: var(--accent); }
 .button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 .button.primary:hover { background: var(--brand-hover); }
 .play-icon { font-size: .7rem; }
-.launch-authors { margin-top: 1.7rem; color: var(--muted); font-size: var(--type-small); }
+.launch-authors { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: .3rem .6rem; margin-top: 1.7rem; color: var(--muted); font-size: var(--type-small); }
+.launch-authors > span { display: inline-block; }
 .launch-authors strong { color: var(--ink); font-weight: 500; }
+.project-links { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: .85rem; }
+.project-links a { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 44px; padding: .45rem .9rem; border: 1px solid var(--blue-line); border-radius: 999px; color: var(--accent); background: var(--paper); font-size: var(--type-small); font-weight: 500; text-decoration: none; }
+.project-links a:hover { background: var(--blue-soft); border-color: var(--accent); }
 .section-number { display: block; margin-bottom: 1rem; color: var(--accent); font-size: var(--type-small); font-weight: 500; }
 .demo-heading, .wide-heading { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: end; gap: 4rem; margin-bottom: 2.5rem; }
 .demo-heading > p, .wide-heading > p { max-width: 48ch; color: var(--muted); font-size: var(--type-body); line-height: 1.7; text-wrap: pretty; }
@@ -379,7 +383,8 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
   .launch-description { font-size: var(--type-body); max-width: 48ch; }
   .links { gap: .65rem; }
   .button { min-height: 48px; padding: .65rem 1.15rem; }
-  .launch-authors { font-size: var(--type-caption); }
+  .launch-authors { flex-direction: column; align-items: center; gap: .15rem; }
+  .launch-authors .affiliation-separator { display: none; }
   .demo-heading, .wide-heading { grid-template-columns: 1fr; gap: 1.2rem; margin-bottom: 2rem; }
   .demo-picker { grid-template-columns: 1fr; gap: .8rem; }
   .demo-tab { display: grid; grid-template-columns: 112px minmax(0, 1fr); border-radius: 12px; }
