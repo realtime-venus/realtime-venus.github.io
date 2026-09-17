@@ -212,7 +212,8 @@
     ui.viewport.setAttribute('aria-label', isVideo ? 'Model response in the recorded scene' : 'Scene conversation. Scroll to review earlier messages.');
     if (!isVideo) ui.viewport.tabIndex = 0;
     ui.empty = node('div', 'scene-opening');
-    ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening), button('scene-start', '▶ Play this scene', () => start()));
+    ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening));
+    if (!isVideo) ui.empty.append(button('scene-start', '▶ Play this scene', () => start()));
     ui.chat = makeTranscript(true); ui.viewport.append(ui.empty, ui.chat); stage.append(ui.viewport);
     media.append(stage);
 
