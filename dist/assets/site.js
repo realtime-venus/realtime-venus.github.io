@@ -5,7 +5,7 @@
   copyButton.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(citation.textContent);
-      copyStatus.textContent = 'Citation copied to clipboard.';
+      copyStatus.textContent = 'Citation copied.';
     } catch {
       const selection = window.getSelection();
       const range = document.createRange();
@@ -68,7 +68,7 @@
       ui.recording.play()?.catch(error => {
         if (ui !== selectedUI || request !== ui.playRequest || error.name === 'AbortError') return;
         playing = false; ui.buffering = false; update();
-        showRecordingError('Playback could not start. Press Play scene to retry.');
+        showRecordingError('Playback could not start. Select Play scene to try again.');
       });
       return;
     }
@@ -164,7 +164,7 @@
     const summary = node('summary', 'disclosure-summary');
     const action = node('span', 'disclosure-action'); action.setAttribute('aria-hidden', 'true');
     action.append(node('span', 'disclosure-expand', 'Expand'), node('span', 'disclosure-collapse', 'Collapse'), node('span', 'disclosure-icon'));
-    summary.append(node('span', 'disclosure-copy', 'Read the full transcript'), action);
+    summary.append(node('span', 'disclosure-copy', 'Full transcript'), action);
     const transcript = makeTranscript(false);
     details.append(summary, transcript);
     target.append(details);
@@ -200,7 +200,7 @@
       film.append(label, frame, axis); main.append(film);
     }
     const channelBox = node('div', 'scene-channels');
-    channelBox.setAttribute('aria-label', 'Illustrated model activity');
+    channelBox.setAttribute('aria-label', 'Activity guide for this demo');
     ui.channels = {};
     [['listen', 'Listen', 'Input stream'], ['speak', 'Speak', 'Realtime-Venus response'], ['delegate', 'Delegate', 'Background task']].forEach(([key, title, subtitle]) => {
       const channel = node('div', 'scene-channel ' + key);
@@ -215,7 +215,7 @@
     ui.viewport.setAttribute('aria-label', 'Scene conversation. Scroll to review earlier messages.');
     ui.viewport.tabIndex = 0;
     ui.empty = node('div', 'scene-opening');
-    ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening));
+    ui.empty.append(node('span', 'scene-opening-label', 'Scene overview'), node('p', '', current.opening));
     if (!isRecorded) ui.empty.append(button('scene-start', '▶ Play this scene', () => start()));
     ui.chat = makeTranscript(true); ui.viewport.append(ui.empty, ui.chat); dialogue.append(ui.viewport);
     main.append(controls);
@@ -367,7 +367,7 @@
     tabs.forEach(tab => { const active = tab.dataset.demo === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; if (active && focus) tab.focus(); });
     panel.setAttribute('aria-labelledby', 'tab-' + id);
     document.getElementById('demo-model').textContent = current.model;
-    document.getElementById('demo-format').textContent = current.format || (current.type === 'audio' ? 'Recorded audio demo' : current.type === 'video' ? 'Recorded demo' : 'Animated research example');
+    document.getElementById('demo-format').textContent = current.format || (current.type === 'audio' ? 'Recorded audio demo' : current.type === 'video' ? 'Recorded video demo' : 'Animated research example');
     document.getElementById('demo-category').textContent = current.category;
     document.getElementById('demo-title').textContent = current.title;
     document.getElementById('demo-summary').textContent = current.summary;
