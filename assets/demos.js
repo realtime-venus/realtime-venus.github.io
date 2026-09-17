@@ -1,4 +1,4 @@
-// Real recordings can be added with type: 'video', src and optional poster/captions.
+// Real recordings use type: 'audio' or 'video' and a source media file.
 // Recorded demos use playback-aligned transcripts; other scenes remain manuscript walkthroughs.
 window.VENUS_DEMOS = [
   {
@@ -67,28 +67,120 @@ window.VENUS_DEMOS = [
     note:'Traffic information is quoted from the paper example, not current guidance. The five-second query interval is an example timeline, not a latency benchmark.'
   },
   {
-    id:'interruption',type:'walkthrough',model:'Realtime-Venus-Audio',
-    category:'Full-duplex conversation',title:'A new question. A new direction.',
-    takeaway:'The first answer stops at 13 s. Your follow-up takes the floor, and the revised answer begins at 15 s.',
-    summary:'Realtime-Venus keeps listening during its own response. When you ask a follow-up, it yields and answers the revised question.',
-    source:'Figure 4 · Original English dialogue from the report.',
-    figure:'./assets/interruption-example.png?v=7',duration:30,input:'Audio input',
-    opening:'You are planning a road trip. Start with a request, then change direction while Realtime-Venus speaks.',
-    spotlight:{time:13,label:'Watch the interruption · 13 s'},
-    phases:[
-      {time:0,title:'Ready to listen',detail:'A conversation can change direction at any moment.',channels:['listen']},
-      {time:1,title:'You set the task',detail:'Realtime-Venus receives the road-trip request.',channels:['listen']},
-      {time:5,title:'Speaking, still listening',detail:'The response begins while incoming speech remains available.',channels:['listen','speak']},
-      {time:13,title:'You interrupt. Realtime-Venus yields.',detail:'The earlier response stops so the follow-up can take the floor.',channels:['listen'],accent:'interruption'},
-      {time:15,title:'A new answer follows your question',detail:'Realtime-Venus addresses the revised request.',channels:['listen','speak'],accent:'response'}
+    "id": "interruption",
+    "type": "audio",
+    "model": "Realtime-Venus-Audio",
+    "category": "Full-duplex conversation",
+    "title": "A new question. A new direction.",
+    "summary": "Listen to a road-trip conversation as a follow-up shifts the focus to daily breaks and meals.",
+    "takeaway": "Around 15 s, you ask a follow-up while the first answer is still playing. Realtime-Venus then responds about breaks and meals.",
+    "source": "Recorded stereo conversation · Synchronized transcript.",
+    "src": "./assets/demos/road-trip.wav",
+    "waveform": "./assets/demos/road-trip-waveform.svg",
+    "duration": 37,
+    "input": "Audio input",
+    "opening": "Plan a three-day road trip, then ask about daily breaks and meals.",
+    "spotlight": {
+      "time": 15.1,
+      "label": "Hear the follow-up · 15 s"
+    },
+    "phases": [
+      {
+        "time": 0,
+        "title": "You set the task",
+        "detail": "A three-day road trip, with safe pacing.",
+        "channels": [
+          "listen"
+        ]
+      },
+      {
+        "time": 3.5,
+        "title": "Speaking, still listening",
+        "detail": "Realtime-Venus asks about the starting city, region, and interests.",
+        "channels": [
+          "listen",
+          "speak"
+        ]
+      },
+      {
+        "time": 15.1,
+        "title": "A follow-up arrives",
+        "detail": "You ask about breaks and meals while the first response is still playing.",
+        "channels": [
+          "listen",
+          "speak"
+        ],
+        "accent": "interruption"
+      },
+      {
+        "time": 15.7,
+        "title": "Your question takes the floor",
+        "detail": "The first response ends as you finish the follow-up.",
+        "channels": [
+          "listen"
+        ],
+        "accent": "interruption"
+      },
+      {
+        "time": 18.3,
+        "title": "The answer follows your question",
+        "detail": "Realtime-Venus discusses stops, meals, overnight stays, and extra time for delays.",
+        "channels": [
+          "listen",
+          "speak"
+        ],
+        "accent": "response"
+      },
+      {
+        "time": 35.52,
+        "title": "The response finishes",
+        "detail": "The conversation ends with a short pause.",
+        "channels": []
+      }
     ],
-    marks:[{time:5,label:'Realtime-Venus speaks'},{time:13,label:'You interrupt'},{time:15,label:'The response adapts'}],
-    events:[
-      {time:1,end:5,role:'You',text:'Help me plan a three-day road trip with safe pacing.'},
-      {time:5,end:13,role:'Realtime-Venus',text:"Got it. I'll plan a three-day road trip, with daily limits and stops. I'll also include meals and...",interrupted:true},
-      {time:13,end:15,role:'You',text:'What should each day look like for breaks and meals?',kind:'interruption'},
-      {time:15,end:30,role:'Realtime-Venus',text:"Start with a breakfast rich in protein and fiber. Then, eat balanced lunches and dinners with vegetables, lean proteins, and whole grains."}
+    "marks": [
+      {
+        "time": 0,
+        "label": "Plan the trip"
+      },
+      {
+        "time": 15.1,
+        "label": "Ask a follow-up"
+      },
+      {
+        "time": 18.3,
+        "label": "Hear the answer"
+      }
     ],
-    note:'The initial response is truncated in the original figure. Event times illustrate the conversational sequence and are not response-latency measurements.'
+    "events": [
+      {
+        "time": 0,
+        "end": 3,
+        "role": "You",
+        "text": "Help me plan a three-day road trip with safe pacing."
+      },
+      {
+        "time": 3.5,
+        "end": 15.7,
+        "role": "Realtime-Venus",
+        "text": "Got it. Let me break this down. I’ll start by asking for your starting city, the region you want to visit, your main interests, and the type of places you want to visit?",
+        "note": "Your follow-up overlaps this response",
+        "noteAt": 15.1
+      },
+      {
+        "time": 15.1,
+        "end": 18,
+        "role": "You",
+        "text": "What should each day look like for breaks and meals?",
+        "kind": "interruption"
+      },
+      {
+        "time": 18.3,
+        "end": 35.52,
+        "role": "Realtime-Venus",
+        "text": "For breaks and meals, we’ll include one major stop per day with lunch and a short visit. I’ll also include two overnight stays, one at each end of the route, plus a buffer for weather or traffic. Now, could you tell me where you’re starting from?"
+      }
+    ],
+    "note": "Original stereo recording. Dialogue follows the supplied transcript; cue times are approximate and aligned to the audio. State indicators are a playback guide."
   }
 ];
