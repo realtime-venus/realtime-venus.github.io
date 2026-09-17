@@ -6,13 +6,13 @@ Project website for **Realtime-Venus: A full-duplex interaction system with asyn
 
 ## Website content
 
-A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. Three animated paper-example scenes reveal dialogue at each event and show the listening, speaking and delegation state. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
+A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. Two animated paper-example scenes reveal dialogue at each event and show the listening, speaking and delegation state. The second card plays a recorded microwave scene with its synchronized model transcript and English subtitles. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
 
 The method explains how the harness prepares a delegated reply and the frontend chooses speech timing, with the revised harness diagram and a concise description of the shared post-training recipe.
 
-The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation and its source figure. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
+The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation; the animated examples also link to their source figures. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
 
-The walkthroughs are **illustrations reconstructed from Figure 4**, not real model recordings or a live service. All dialogue and scores come from the September 9, 2026 manuscript, using the revised Realtime-Venus report supplied on September 15, 2026. The displayed report date remains the date printed in the manuscript. The delegation transcript is translated from Chinese and its example traffic information is not current guidance.
+Scenes 01 and 03 are **illustrations reconstructed from Figure 4**, not real model recordings or a live service. Scene 02 uses the supplied `test2_microwave.mp4` and the reply in `test2_microwave_io.jsonl`. The MP4 is 45 seconds; the log’s `played` interval, 30–34.28 seconds, supplies the transcript and subtitle timing. The generation interval is not used as subtitle timing. Only the model dialogue is published; internal paths and run metadata are omitted. Research scores remain from the September 9, 2026 manuscript. The delegation transcript is translated from Chinese and its example traffic information is not current guidance.
 
 The filmstrip cursor uses the original figure’s 0–40 s axis, independently of the shorter authored playback endpoints. Dialogue appears as complete messages at the reported events; no word-level speech timing or generated audio is implied. Playback starts only on visitor action. Reduced-motion preferences disable message entrances and activity motion, and make the filmstrip cursor step between phases.
 
@@ -24,7 +24,7 @@ The complete static site is in `dist/`. There are no dependencies or build steps
 python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
 ```
 
-Run the timeline regression checks with `node --test tests/demo-timeline.test.cjs`. They cover the whistle trigger, overlapping delegation/input, interruption handling, the original filmstrip time axis, rewinding and completion.
+Run the timeline regression checks with `node --test tests/demo-timeline.test.cjs`. They cover overlapping delegation/input, interruption handling, the recorded microwave subtitle interval, the original filmstrip time axis, rewinding and completion.
 
 ## Add recorded demos
 
@@ -51,6 +51,9 @@ Edit `dist/assets/demos.js`. For an existing scene, set `type` to `video` and ad
 - `dist/assets/site.js`: walkthroughs, video playback and citation copying.
 - `dist/assets/demos.js`: demo content and media settings.
 - `dist/assets/demo-engine.js`: shared, deterministic timeline state for animation and navigation.
+- `dist/assets/demos/microwave.mp4`: supplied recording, remuxed for fast-start playback without re-encoding.
+- `dist/assets/demos/microwave-poster.jpg`: cover frame extracted from the recording.
+- `dist/assets/demos/microwave.en.vtt`: English model-response subtitles aligned to the JSONL playback interval.
 - `dist/assets/*example.png`: Figure 4 examples extracted from the revised report.
 - `dist/assets/harness-architecture.png`: Figure 7, task capture, dispatch, reply preparation and delivery.
 - `dist/assets/system-overview.png`, `model-memory.png`, `benchmark-radars.png`: updated report figures. The radar export’s browser print header, footer and whitespace are excluded.

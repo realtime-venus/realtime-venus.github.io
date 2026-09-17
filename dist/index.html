@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Explore Realtime-Venus through three research demos: natural interruptions, proactive audio–visual interaction, and asynchronous delegation. Two 9B models, one connected system.">
+<meta name="description" content="Explore Realtime-Venus through three demos: natural interruptions, proactive audio–visual interaction, and asynchronous delegation. Two 9B models, one connected system.">
 <meta name="theme-color" content="#ffffff"><meta property="og:title" content="Realtime-Venus — Full-duplex interaction with asynchronous delegation"><meta property="og:description" content="Continuous perception, native speech, and asynchronous capability execution. Venus Team, Ant Group and Tsinghua University."><meta property="og:type" content="website"><meta property="og:url" content="https://realtime-venus.github.io/">
 <title>Realtime-Venus — Full-duplex interaction with asynchronous delegation</title>
-<link rel="icon" href="./assets/favicon.svg?v=6" type="image/svg+xml"><link rel="canonical" href="https://realtime-venus.github.io/"><link rel="preload" href="./assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="./assets/site.css?v=9"><script src="./assets/demos.js?v=12" defer></script><script src="./assets/demo-engine.js?v=4" defer></script><script src="./assets/site.js?v=11" defer></script>
+<link rel="icon" href="./assets/favicon.svg?v=6" type="image/svg+xml"><link rel="canonical" href="https://realtime-venus.github.io/"><link rel="preload" href="./assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="./assets/site.css?v=14"><script src="./assets/demos.js?v=14" defer></script><script src="./assets/demo-engine.js?v=4" defer></script><script src="./assets/site.js?v=14" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -22,22 +22,22 @@
 <p class="launch-authors">Venus Team · <strong>Ant Group</strong> · Tsinghua University</p>
 </section>
 <section id="demos" class="demo-section wrap" aria-labelledby="demos-title">
-<div class="demo-heading"><div><span class="section-number">The experience</span><h2 id="demos-title">A conversation can<br>change at any moment.</h2></div><p>Follow three moments from the research: a new question, a visual event, and a task running in the background.</p></div>
+<div class="demo-heading"><div><span class="section-number">The experience</span><h2 id="demos-title">A conversation can<br>change at any moment.</h2></div><p>Follow three moments: a new question, a microwave alert, and a task running in the background.</p></div>
 <div class="demo-picker" role="tablist" aria-label="Choose an interaction example">
 <button class="demo-tab" id="tab-interruption" role="tab" aria-selected="true" aria-controls="demo-panel" data-demo="interruption" aria-label="Interruption: change direction">
 <span class="demo-cover quote-cover" aria-hidden="true"><span class="cover-label">You, at 13 s</span><span class="cover-quote">“What should each day look like for breaks and meals?”</span><span class="cover-mini">You jump in.</span><span class="cover-play">▶</span></span>
 <span class="demo-tab-copy"><span class="demo-tab-meta">01 / Full-duplex speech <span>30 s</span></span><strong>Change direction.</strong><span class="demo-tab-description">Jump in while Realtime-Venus is speaking.</span><span class="demo-tab-action">Explore the scene <span aria-hidden="true">↗</span></span></span>
 </button>
-<button class="demo-tab" id="tab-proactive" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" data-demo="proactive" aria-label="Proactive perception: catch the moment">
-<span class="demo-cover"><img src="./assets/proactive-filmstrip.jpg" alt="" width="1168" height="86"><span class="cover-label">The opening whistle</span><span class="cover-play" aria-hidden="true">▶</span></span>
-<span class="demo-tab-copy"><span class="demo-tab-meta">02 / Audio + video <span>20 s</span></span><strong>Catch the moment.</strong><span class="demo-tab-description">Respond when the requested event happens.</span><span class="demo-tab-action">Explore the scene <span aria-hidden="true">↗</span></span></span>
+<button class="demo-tab" id="tab-proactive" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" data-demo="proactive" aria-label="Proactive perception: catch the microwave beep">
+<span class="demo-cover"><img src="./assets/demos/microwave-poster.jpg" alt="" width="960" height="544"><span class="cover-label">The microwave alert</span><span class="cover-play" aria-hidden="true">▶</span></span>
+<span class="demo-tab-copy"><span class="demo-tab-meta">02 / Audio + video <span>45 s</span></span><strong>Catch the beep.</strong><span class="demo-tab-description">Recognize a sound in its visual context.</span><span class="demo-tab-action">Watch the recording <span aria-hidden="true">↗</span></span></span>
 </button>
 <button class="demo-tab" id="tab-delegation" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" data-demo="delegation" aria-label="Delegation: keep things moving">
 <span class="demo-cover"><img src="./assets/delegation-filmstrip.jpg" alt="" width="991" height="68"><span class="cover-label">A lookup on the road</span><span class="cover-play" aria-hidden="true">▶</span></span>
 <span class="demo-tab-copy"><span class="demo-tab-meta">03 / Delegation <span>22 s</span></span><strong>Keep things moving.</strong><span class="demo-tab-description">Run a lookup while perception continues.</span><span class="demo-tab-action">Explore the scene <span aria-hidden="true">↗</span></span></span>
 </button>
 </div>
-<p class="demo-disclosure">Animated research examples from Figure 4. These walkthroughs use the paper’s dialogue and timestamps, without recorded audio or a live model connection.</p>
+<p class="demo-disclosure">Scene 02 is a recorded audio–visual demo. Scenes 01 and 03 are animated examples based on Figure 4; they have no recorded audio.</p>
 <div id="demo-panel" class="demo-panel" role="tabpanel" tabindex="0" aria-labelledby="tab-interruption">
 <div class="demo-panel-top"><span id="demo-model">Realtime-Venus-Audio</span><span id="demo-format">Animated research example</span></div>
 <div class="demo-content"><div class="demo-player"><div id="demo-media" class="demo-media"><img class="demo-paper-example" src="./assets/interruption-example.png?v=7" alt="Paper example: the user asks a follow-up at 13 seconds, the assistant yields and begins the revised answer at 15 seconds." width="1800" height="351"></div><div id="demo-controls"></div></div>

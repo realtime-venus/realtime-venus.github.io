@@ -114,16 +114,29 @@
   }
   function makeTranscript(interactive) {
     const list = node('ol', interactive ? 'walkthrough-transcript scene-chat' : 'walkthrough-transcript');
-    list.setAttribute('aria-label', interactive ? 'Conversation at this point in the scene' : 'Full paper example transcript');
+    list.setAttribute('aria-label', interactive ? 'Conversation at this point in the scene' : 'Full scene transcript');
     current.events.forEach(event => {
       const item = node('li', 'transcript-item' + (event.role === 'Realtime-Venus' ? ' from-venus' : '') + (event.kind ? ' ' + event.kind : ''));
       const head = node('div', 'transcript-head');
-      head.append(node('strong', '', event.role), node('span', '', timestamp(event.time)));
+      const cueTime = current.type === 'video' ? `${timestamp(event.time)}–${timestamp(event.end)}` : timestamp(event.time);
+      head.append(node('strong', '', event.role), node('span', '', cueTime));
       item.append(head, node('p', '', event.text));
       if (event.interrupted) item.append(node('span', 'transcript-note', 'Interrupted · Realtime-Venus yields to your follow-up'));
       list.append(item);
     });
     return list;
+  }
+  function appendTranscript() {
+    const details = node('details', 'scene-transcript');
+    const summary = node('summary', 'disclosure-summary');
+    const action = node('span', 'disclosure-action'); action.setAttribute('aria-hidden', 'true');
+    action.append(node('span', 'disclosure-expand', 'Expand'), node('span', 'disclosure-collapse', 'Collapse'), node('span', 'disclosure-icon'));
+    summary.append(node('span', 'disclosure-copy', 'Read the full transcript'), action);
+    const transcript = makeTranscript(false);
+    details.append(summary, transcript);
+    controls.append(details);
+    if (current.note) controls.append(node('p', 'playback-note', current.note));
+    return transcript;
   }
   function showWalkthrough() {
     const stage = node('div', 'scene-stage');
@@ -183,25 +196,36 @@
       panel.focus({preventScroll: true});
     });
     chapters.append(ui.next); controls.append(chapters);
-    const details = node('details', 'scene-transcript');
-    const summary = node('summary', 'disclosure-summary');
-    const action = node('span', 'disclosure-action'); action.setAttribute('aria-hidden', 'true');
-    action.append(node('span', 'disclosure-expand', 'Expand'), node('span', 'disclosure-collapse', 'Collapse'), node('span', 'disclosure-icon'));
-    summary.append(node('span', 'disclosure-copy', 'Read the full transcript'), action);
-    details.append(summary, makeTranscript(false));
-    controls.append(details, node('p', 'playback-note', current.note));
+    appendTranscript();
     update();
   }
   function showVideo() {
+    const recording = current;
     const video = node('video', 'recorded-demo'); video.controls = true; video.playsInline = true; video.preload = 'metadata'; video.src = current.src;
+    video.setAttribute('aria-label', current.title);
+    if (current.width && current.height) { video.width = current.width; video.height = current.height; video.style.aspectRatio = `${current.width} / ${current.height}`; }
     if (current.poster) video.poster = current.poster;
-    if (current.captions) { const track = node('track'); track.kind = 'captions'; track.src = current.captions; track.srclang = current.language || 'en'; track.label = 'Captions'; video.append(track); }
+    if (current.captions) { const track = node('track'); track.kind = 'subtitles'; track.src = current.captions; track.srclang = current.language || 'en'; track.label = 'Model response (English)'; track.default = true; video.append(track); }
     video.append(node('p', '', 'Your browser does not support this video.'));
     video.addEventListener('error', () => {
+      if (current !== recording) return;
       const message = node('p', 'video-error', 'The recording could not be loaded. ');
-      const link = node('a', '', 'Open the video directly'); link.href = current.src; link.target = '_blank'; link.rel = 'noopener'; message.append(link); media.append(message);
+      const link = node('a', '', 'Open the video directly'); link.href = recording.src; link.target = '_blank'; link.rel = 'noopener'; message.append(link); media.append(message);
     }, {once: true});
     media.append(video);
+    if (current.events?.length) {
+      const transcript = appendTranscript();
+      video.addEventListener('timeupdate', () => {
+        recording.events.forEach((event, i) => {
+          const item = transcript.children[i];
+          const active = video.currentTime >= event.time && video.currentTime < event.end;
+          item.classList.toggle('is-active', active);
+          if (active) item.setAttribute('aria-current', 'step'); else item.removeAttribute('aria-current');
+        });
+      });
+    }
+    const syncPlayback = () => { if (current === recording) panel.dataset.playing = String(!video.paused && !video.ended); };
+    ['play', 'pause', 'ended'].forEach(event => video.addEventListener(event, syncPlayback));
   }
   function select(id, focus = false) {
     const match = demos.find(demo => demo.id === id);
@@ -220,11 +244,20 @@
     document.getElementById('demo-source').textContent = current.source;
     const figureLink = document.getElementById('demo-figure-link'); figureLink.hidden = !current.figure;
     if (current.figure) figureLink.href = current.figure;
-    spotlight.hidden = current.type !== 'walkthrough' || !current.spotlight;
+    spotlight.hidden = !current.spotlight;
     if (!spotlight.hidden) spotlight.textContent = current.spotlight.label + ' ↗';
     if (current.type === 'video') showVideo(); else showWalkthrough();
   }
-  spotlight.addEventListener('click', () => start(Math.max(0, current.spotlight.time - 2)));
+  spotlight.addEventListener('click', () => {
+    if (!current.spotlight) return;
+    const position = Math.max(0, current.spotlight.time - 2);
+    if (current.type === 'video') {
+      const video = media.querySelector('video');
+      if (!video) return;
+      video.currentTime = position;
+      video.play()?.catch(() => video.focus());
+    } else start(position);
+  });
   tabs.forEach((tab, index) => {
     tab.addEventListener('click', () => {
       select(tab.dataset.demo);
