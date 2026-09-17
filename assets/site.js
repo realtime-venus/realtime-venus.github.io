@@ -462,7 +462,6 @@
     document.getElementById('demo-title').textContent = current.title;
     document.getElementById('demo-summary').textContent = current.summary;
     document.getElementById('demo-takeaway').textContent = current.takeaway || current.summary;
-    document.getElementById('demo-source').textContent = current.source;
     const figureLink = document.getElementById('demo-figure-link'); figureLink.hidden = !current.figure;
     if (current.figure) figureLink.href = current.figure;
     spotlight.hidden = !current.spotlight;
