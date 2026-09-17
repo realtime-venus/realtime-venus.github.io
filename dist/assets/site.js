@@ -124,6 +124,8 @@
     });
     ui.empty.hidden = state.visible.length > 0;
     ui.chat.hidden = !state.visible.length;
+    const followTranscript = ui.viewport.scrollHeight - ui.viewport.clientHeight - ui.viewport.scrollTop < 64;
+    const rewound = time < (ui.lastRenderTime ?? 0);
     current.events.forEach((event, i) => {
       const el = ui.chat.children[i];
       const visible = state.visible.includes(i), active = state.active.includes(i);
@@ -138,12 +140,13 @@
     const visibleKey = state.visible.join(',');
     if (visibleKey !== lastVisible) {
       // Scroll only the conversation viewport, never the visitor's page.
-      ui.viewport.scrollTop = ui.viewport.scrollHeight;
+      if (followTranscript || rewound) ui.viewport.scrollTop = ui.viewport.scrollHeight;
       lastVisible = visibleKey;
     }
     ui.chapters.forEach((el, i) => {
       if (state.chapter === i) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current');
     });
+    ui.lastRenderTime = time;
     ui.next.hidden = !state.complete;
   }
   function makeTranscript(interactive) {
@@ -160,7 +163,7 @@
     });
     return list;
   }
-  function appendTranscript() {
+  function appendTranscript(target) {
     const details = node('details', 'scene-transcript');
     const summary = node('summary', 'disclosure-summary');
     const action = node('span', 'disclosure-action'); action.setAttribute('aria-hidden', 'true');
@@ -168,24 +171,27 @@
     summary.append(node('span', 'disclosure-copy', 'Read the full transcript'), action);
     const transcript = makeTranscript(false);
     details.append(summary, transcript);
-    controls.append(details);
-    if (current.note) controls.append(node('p', 'playback-note', current.note));
+    target.append(details);
+    if (current.note) details.append(node('p', 'playback-note', current.note));
     return transcript;
   }
   function showScene() {
     const isVideo = current.type === 'video', isAudio = current.type === 'audio';
     const isRecorded = isVideo || isAudio;
-    const hasScrollableDialogue = !isVideo || current.events.length > 1;
     const stage = node('div', 'scene-stage' + (isVideo ? ' scene-recording' : isAudio ? ' scene-audio' : ''));
-    if (isVideo && hasScrollableDialogue) stage.classList.add('scene-dialogue');
+    const main = node('div', 'scene-main');
+    const dialogue = node('div', 'scene-dialogue-panel');
+    dialogue.setAttribute('role', 'group');
+    dialogue.setAttribute('aria-label', 'Synchronized conversation and model output');
+    stage.append(main, dialogue);
     const header = node('div', 'scene-topline');
     ui.status = node('span', 'scene-status'); ui.counter = node('span', 'scene-counter');
-    header.append(ui.status, ui.counter); stage.append(header);
+    header.append(ui.status, ui.counter); dialogue.append(header);
     const phase = node('div', 'scene-phase');
-    ui.heading = node('h4'); ui.detail = node('p'); phase.append(ui.heading, ui.detail); stage.append(phase);
+    ui.heading = node('h4'); ui.detail = node('p'); phase.append(ui.heading, ui.detail); dialogue.append(phase);
     ui.announcement = node('p', 'sr-only'); ui.announcement.setAttribute('role', 'status'); ui.announcement.setAttribute('aria-live', 'polite');
-    stage.append(ui.announcement);
-    if (isRecorded) appendRecording(stage);
+    dialogue.append(ui.announcement);
+    if (isRecorded) appendRecording(main);
     if (current.filmstrip) {
       const film = node('div', 'scene-film');
       const label = node('div', 'scene-film-label'); label.append(node('span', '', 'Original paper frames'), node('span', '', 'Illustrated timeline'));
@@ -195,7 +201,7 @@
       frame.append(strip, ui.filmCursor);
       const axis = node('div', 'scene-film-axis'); axis.setAttribute('aria-hidden', 'true');
       [0,10,20,30,40].forEach(t => axis.append(node('span', '', timestamp(t))));
-      film.append(label, frame, axis); stage.append(film);
+      film.append(label, frame, axis); main.append(film);
     }
     const channelBox = node('div', 'scene-channels');
     channelBox.setAttribute('aria-label', 'Illustrated model activity');
@@ -207,15 +213,16 @@
       channel.append(row, node('span', 'channel-description', subtitle), meter);
       ui.channels[key] = channel; channelBox.append(channel);
     });
-    stage.append(channelBox);
+    dialogue.append(channelBox);
     ui.viewport = node('div', 'scene-conversation');
     ui.viewport.setAttribute('role', 'region');
-    ui.viewport.setAttribute('aria-label', hasScrollableDialogue ? 'Scene conversation. Scroll to review earlier messages.' : 'Model response in the recorded scene');
-    if (hasScrollableDialogue) ui.viewport.tabIndex = 0;
+    ui.viewport.setAttribute('aria-label', 'Scene conversation. Scroll to review earlier messages.');
+    ui.viewport.tabIndex = 0;
     ui.empty = node('div', 'scene-opening');
     ui.empty.append(node('span', 'scene-opening-label', 'The scene'), node('p', '', current.opening));
     if (!isVideo) ui.empty.append(button('scene-start', '▶ Play this scene', () => start()));
-    ui.chat = makeTranscript(true); ui.viewport.append(ui.empty, ui.chat); stage.append(ui.viewport);
+    ui.chat = makeTranscript(true); ui.viewport.append(ui.empty, ui.chat); dialogue.append(ui.viewport);
+    main.append(controls);
     media.append(stage);
 
     const bar = node('div', 'playback-bar');
@@ -243,7 +250,7 @@
     });
     chapters.append(ui.next); controls.append(chapters);
     if (isRecorded) appendRecordingTools();
-    ui.transcript = appendTranscript();
+    ui.transcript = appendTranscript(dialogue);
     update();
   }
   function appendRecording(stage) {
@@ -387,7 +394,7 @@
   tabs.forEach((tab, index) => {
     tab.addEventListener('click', () => {
       select(tab.dataset.demo);
-      panel.scrollIntoView?.({behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start'});
+      panel.scrollIntoView?.({behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'nearest'});
       panel.focus({preventScroll: true});
     });
     tab.addEventListener('keydown', event => {

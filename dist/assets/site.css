@@ -457,3 +457,86 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .scene-waveform { position: relative; overflow: hidden; border-radius: 10px; background: var(--wash); }
 .scene-waveform img { display: block; width: 100%; height: auto; }
 .scene-audio .scene-conversation { height: 360px; }
+/* Compact demo workspace: media left, synchronized output right. */
+.demo-heading { grid-template-columns: 1.2fr 1fr; gap: 2rem; margin-bottom: 1.1rem; }
+.demo-heading .section-number { margin-bottom: .4rem; }
+.demo-heading h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+.demo-heading > p { font-size: var(--type-small); line-height: 1.5; }
+.demo-picker { gap: .75rem; margin-bottom: 1rem; }
+.demo-tab { display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; border-radius: 12px; }
+.demo-cover { height: 100%; min-height: 86px; }
+.demo-cover > .cover-label, .cover-quote, .cover-play, .demo-tab-description, .demo-tab-action { display: none; }
+.quote-cover { display: flex; align-items: center; padding: .6rem; }
+.cover-mini { display: block; margin: 0; color: var(--accent); font-size: var(--type-small); font-weight: 500; line-height: 1.4; }
+.demo-tab-copy { padding: .65rem .85rem; }
+.demo-tab-meta { flex-wrap: wrap; gap: .1rem .5rem; margin-bottom: .3rem; }
+.demo-tab-copy > strong { font-size: 1rem; line-height: 1.35; }
+.demo-disclosure { margin: .75rem 0 0; max-width: none; }
+.demo-panel-top { padding: .5rem 1.25rem; }
+.demo-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: .6rem 1.25rem; padding: .8rem 1.25rem; }
+.demo-panel-heading h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.3; }
+.demo-panel-heading .scene-spotlight { width: auto; max-width: 48%; flex-shrink: 0; margin: 0; min-height: 36px; padding: .4rem .7rem; font-size: var(--type-caption); }
+.demo-content { display: block; padding: 0 1.25rem 1rem; }
+.demo-description { border: 0; border-top: 1px solid var(--line); padding: 0 1.25rem; }
+.demo-description > summary { min-height: 44px; padding: .4rem 0; font-size: var(--type-small); }
+.demo-description-body { padding: .35rem 0 1rem; max-width: 90ch; }
+.demo-description-body .section-number { margin-bottom: .35rem; }
+.demo-description-body > p { color: var(--muted); font-size: var(--type-body); line-height: 1.6; }
+.demo-description-body > .demo-source { margin-top: .65rem; font-size: var(--type-caption); }
+.demo-description-body > a { display: inline-block; margin-top: .5rem; color: var(--accent); font-size: var(--type-small); }
+.demo-takeaway { margin-top: .75rem; padding-top: .75rem; }
+.scene-stage { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.25rem; align-items: stretch; overflow: visible; }
+.scene-main { min-width: 0; }
+.scene-main .scene-film { padding-bottom: 0; }
+.scene-main .recorded-demo { max-height: clamp(190px, calc(100svh - 500px), 350px); object-fit: contain; }
+.scene-main .playback-bar { padding: .65rem 0 .4rem; gap: .35rem .65rem; }
+.scene-main .walkthrough-play { min-width: 135px; min-height: 42px; }
+.scene-main .timeline-slider { height: 24px; }
+.scene-main .walkthrough-chapters { gap: .4rem; padding-bottom: .2rem; }
+.scene-main .walkthrough-chapters button { min-height: 34px; padding: .3rem .5rem; gap: .4rem; }
+.scene-main .media-tools { margin: .3rem 0 0; gap: .4rem; }
+.scene-dialogue-panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.scene-dialogue-panel .scene-topline { padding-bottom: .3rem; }
+.scene-dialogue-panel .scene-phase { padding: .35rem 0 .6rem; min-height: 82px; }
+.scene-dialogue-panel .scene-phase h4 { font-size: 1.15rem; line-height: 1.35; }
+.scene-dialogue-panel .scene-phase > p { margin-top: .3rem; line-height: 1.5; }
+.scene-dialogue-panel .scene-channels { padding-bottom: .65rem; }
+.scene-dialogue-panel .scene-channel { padding: .5rem .6rem; }
+.scene-dialogue-panel .channel-description { display: none; }
+.scene-dialogue-panel .channel-meter { margin-top: .4rem; }
+.scene-stage .scene-dialogue-panel .scene-conversation { height: 0; min-height: 180px; flex: 1 1 0; overflow-y: auto; padding: .85rem; }
+.scene-stage .scene-dialogue-panel .scene-opening { min-height: 100%; max-width: none; margin: 0; gap: .55rem; }
+.scene-stage .scene-dialogue-panel .scene-opening > p { font-size: var(--type-body); }
+.scene-dialogue-panel .scene-chat .transcript-item { width: 100%; padding: .65rem .8rem; }
+.scene-dialogue-panel .scene-chat .transcript-item p { font-size: 1rem; line-height: 1.55; }
+.scene-dialogue-panel .scene-transcript { margin: .65rem 0 0; flex-shrink: 0; }
+.scene-dialogue-panel .scene-transcript > summary { min-height: 44px; padding: .5rem .8rem; }
+.scene-transcript .playback-note { margin: 0 1rem 1rem; }
+@media (max-width: 1100px) {
+  .demo-tab { grid-template-columns: 58px minmax(0, 1fr); }
+  .demo-tab-copy { padding: .55rem .65rem; }
+  .demo-tab-copy > strong { font-size: .9375rem; }
+  .demo-tab-meta { font-size: var(--type-caption); }
+}
+@media (max-width: 760px) {
+  .scene-stage { grid-template-columns: 1fr; gap: 1.25rem; }
+  .scene-main .recorded-demo { max-height: none; }
+  .scene-stage .scene-dialogue-panel .scene-conversation { height: 300px; min-height: 180px; flex: none; }
+  .scene-dialogue-panel .scene-phase { min-height: 0; }
+  .scene-main .playback-speed { margin-left: auto; }
+  .scene-main .playback-time { margin-right: 0; }
+  .demo-content { padding: 0 1rem 1rem; }
+  .demo-panel-heading, .demo-panel-top { padding-inline: 1rem; }
+  .demo-description { padding-inline: 1rem; }
+}
+@media (max-width: 600px) {
+  .demo-heading { grid-template-columns: 1fr; gap: .5rem; margin-bottom: 1rem; }
+  .demo-picker { grid-template-columns: 1fr; gap: .5rem; }
+  .demo-tab { grid-template-columns: 58px minmax(0, 1fr); }
+  .demo-cover { min-height: 60px; }
+  .demo-tab-copy { padding: .5rem .75rem; }
+  .demo-tab-meta { flex-wrap: nowrap; margin-bottom: .15rem; }
+  .demo-tab-copy > strong { font-size: 1rem; }
+  .demo-panel-heading { align-items: flex-start; flex-direction: column; padding-block: .65rem; }
+  .demo-panel-heading .scene-spotlight { max-width: 100%; }
+}
