@@ -5,3 +5,12 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+# Keep the team gallery limited to the approved published media.
+/dist/assets/team-work/*
+!/dist/assets/team-work/gaze-guide.jpg
+!/dist/assets/team-work/gaze-guide.mp4
+!/dist/assets/team-work/menu-recognition.jpg
+!/dist/assets/team-work/menu-recognition.mp4
+!/dist/assets/team-work/ring-capture.jpg
+!/dist/assets/team-work/ring-capture.mp4
