@@ -341,7 +341,7 @@ tbody .score { color: var(--accent); font-weight: 500; font-variant-numeric: tab
 .interruption-result span { font-size: var(--type-caption); color: var(--muted); }
 .radar-figure { padding: 1.75rem; margin: 3rem 0 2rem; border: 1px solid var(--line); border-radius: 14px; }
 
-/* The report is the closing destination; citation details expand in place. */
+/* Research details, followed by the team's wider work and contact information. */
 .citation-section { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; gap: 5rem; border-top: 1px solid var(--line); padding-block: var(--section-space); }
 .citation-section h2 { font-weight: 500; }
 .paper-reference { color: var(--muted); margin-top: 1.25rem; line-height: 1.7; }
@@ -358,6 +358,34 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 #copy-status { min-height: 1.5rem; color: var(--muted); font-size: var(--type-caption); margin-top: .5rem; }
 .site-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-block: 2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--type-caption); }
 .site-footer > a:last-child { white-space: nowrap; }
+
+.team-work-section { padding-block: var(--section-space); border-top: 1px solid var(--line); }
+.team-work-heading { margin-bottom: 2rem; }
+.team-work-heading h2 { font-weight: 500; }
+.team-work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.team-work-card { min-width: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--paper); }
+.team-work-media { position: relative; aspect-ratio: 16 / 10; background: var(--wash); }
+.team-work-play { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; text-decoration: none; }
+.team-work-play img, .team-work-video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.team-work-play-label { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 44px; padding: .5rem 1rem; border: 1px solid var(--blue-line); border-radius: 999px; background: var(--paper); color: var(--accent); font-size: var(--type-small); font-weight: 500; white-space: nowrap; box-shadow: 0 2px 12px #172b4614; }
+.team-work-play:hover .team-work-play-label { background: var(--blue-soft); border-color: var(--accent); }
+.team-work-play:focus-visible { outline-offset: -5px; }
+.team-work-play[hidden], .team-work-video[hidden], .team-work-error[hidden] { display: none; }
+.team-work-caption { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; }
+.team-work-caption h3 { font-size: var(--type-body); font-weight: 500; line-height: 1.5; letter-spacing: 0; }
+.team-work-duration { color: var(--muted); font-size: var(--type-small); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.team-work-error { padding: 0 1.25rem 1rem; color: var(--muted); font-size: var(--type-small); }
+.team-work-error a { color: var(--accent); }
+.team-contact { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.team-contact h3 { font-size: var(--type-title); font-weight: 500; }
+.team-contact-links { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; }
+.team-contact-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent); font-size: var(--type-body); overflow-wrap: anywhere; }
+
+@media (max-width: 760px) {
+  .team-work-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .team-contact { align-items: flex-start; flex-direction: column; }
+  .team-contact-links { flex-direction: column; gap: .25rem; max-width: 100%; }
+}
 
 @media (max-width: 1000px) {
   .header-inner { gap: 1.5rem; }

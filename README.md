@@ -10,7 +10,7 @@ A demo-led presentation of proactive audio–visual interaction, full-duplex spe
 
 The method explains how the harness prepares a delegated reply and the frontend chooses speech timing, with the revised harness diagram and a concise description of the shared post-training recipe.
 
-The reading order is overview → demos → how it works → results → report. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player and preserves the position and native buffer when returning to an already opened scene; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation and a synchronized transcript. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
+The reading order is overview → demos → how it works → results → report → other work and contact. The centered introduction leads to three scene cards, ordered interruption → proactive perception → delegation. Activating a card reveals its player and preserves the position and native buffer when returning to an already opened scene; keyboard arrows browse the cards without scrolling. Each example pairs playback with a key-moment explanation and a synchronized transcript. The dual-loop architecture is visible in the main story, with implementation, detailed benchmarks and BibTeX available on demand.
 
 Scene 01 uses the supplied `case_stereo.wav` and `audio_demo.txt`. The original 37-second stereo PCM recording remains available as a fallback; playback uses a smaller AAC copy with the same stereo channels and timeline. Approximate dialogue cues are aligned to channel activity at 0, 3.5, 15.1 and 18.3 seconds; the first reply continues briefly after the follow-up starts, and the recording retains its silent tail. These cues are not response-latency measurements.
 
@@ -19,6 +19,14 @@ Scene 03 is assembled from the supplied `video.mp4`, `user.mp3`, `assistant_01.w
 Scene 02 uses the supplied `test2_microwave.mp4` and the reply in `test2_microwave_io.jsonl`. The web-optimized H.264/AAC copy preserves the original 45-second timeline and audio. The opening request uses the user-confirmed wording with an approximate 1.74–4.64-second cue. No dialogue is inferred from the intervening appliance sounds. The log’s `played` interval, 30–34.28 seconds, supplies the model reply and its subtitle timing. The generation interval is not used as subtitle timing. Only demonstration content is published; internal paths and run metadata are omitted. Research scores remain from the September 9, 2026 manuscript. Scene 03 follows the supplied English dialogue.
 
 Dialogue appears as complete messages at the aligned events; no word-level speech timing is implied. Playback starts only on visitor action. The selected demo preloads when the section approaches the viewport; Save-Data and slow 2G connections keep metadata-only loading until playback is requested. Other demos are not speculatively downloaded. On the Sites mirror, media and caption requests use the public GitHub Pages origin with anonymous CORS, since the Sites static asset proxy returns complete files instead of preserving byte-range requests. Local and GitHub Pages playback keep relative URLs. Dragging previews the timeline, commits one seek on release, and resumes only if playback was active. Animation frames read native media time for smooth progress; transcript DOM and scroll measurements update only when their state changes. Reduced-motion preferences disable message entrances and activity motion, without changing the recording timelines.
+
+## Other team work
+
+The closing gallery presents three supplied recordings: gaze-based museum guidance, menu recognition, and ring-controlled capture. The source files come from the supplied Realtime-Venus directory and its ring-demo subfolder; model-repository sample clips are excluded. Descriptive English labels identify the video content, without claiming that all examples use the Realtime-Venus model.
+
+Each card initially contains only a lazy-loaded poster and a normal video link. The native player is created on the visitor’s first click, so gallery recordings do not download during initial page loading. Full recordings retain their audio, use browser-compatible H.264/AAC and fast-start metadata, and play through the existing range-capable GitHub media origin on the Sites mirror. Only one recording plays at a time across the gallery and main demos. Playback also pauses when the page is hidden, and a failed player exposes a retry action and direct video link.
+
+The gallery ends with clickable contact addresses: `huangyuge.hyg@antgroup.com` and `rex.lj@antgroup.com`.
 
 ## Local preview
 
@@ -53,6 +61,8 @@ Edit `dist/assets/demos.js`. For an existing scene, set `type` to `audio` or `vi
 - `dist/index.html`: page content and navigation.
 - `dist/assets/site.css`: responsive styling.
 - `dist/assets/site.js`: walkthroughs, video playback and citation copying.
+- `dist/assets/team-work.js`: click-to-load video gallery and playback coordination.
+- `dist/assets/team-work/`: complete team videos optimized for the web and extracted cover frames.
 - `dist/assets/demos.js`: demo content and media settings.
 - `dist/assets/demo-engine.js`: shared, deterministic timeline state for animation and navigation.
 - `dist/assets/demos/shanghai-flights.mp4`: Shanghai footage combined with the three supplied speech clips.
