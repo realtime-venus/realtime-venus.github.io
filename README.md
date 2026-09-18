@@ -59,6 +59,7 @@ Edit `dist/assets/demos.js`. For an existing scene, set `type` to `audio` or `vi
 - `dist/assets/demos/shanghai-flights-poster.jpg`: Shanghai skyline cover extracted from the footage.
 - `dist/assets/demos/shanghai-flights.en.vtt`: complete user/assistant utterances aligned to the clips.
 - `dist/assets/demos/road-trip.wav`: original stereo road-trip recording and compatibility fallback.
+- `dist/assets/venus-logo-white.png`: supplied Realtime-Venus brand mark for the header on a light background.
 - `dist/assets/demos/road-trip.m4a`: AAC delivery copy with unchanged duration and stereo channels.
 - `dist/assets/demos/road-trip-waveform.svg`: measured two-channel amplitude envelope.
 - `dist/assets/demos/microwave.mp4`: H.264 delivery copy with fast-start metadata, short keyframe intervals, and the original AAC audio.
