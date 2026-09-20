@@ -51,7 +51,6 @@ window.VENUS_DEMOS = [
     "id": "delegation",
     "type": "video",
     "model": "Realtime-Venus-Omni",
-    "format": "Video + dialogue demo",
     "mediaLabel": "Video + dialogue",
     "category": "Asynchronous delegation",
     "title": "See the city. Find a flight.",

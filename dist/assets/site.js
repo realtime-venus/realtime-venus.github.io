@@ -321,7 +321,7 @@
     const selectedUI = ui, isVideo = current.type === 'video';
     const frame = node('div', 'scene-film ' + (isVideo ? 'scene-video' : 'scene-audio-wave'));
     const label = node('div', 'scene-film-label');
-    label.append(node('span', '', current.mediaLabel || (isVideo ? 'Recorded scene' : 'Recorded stereo conversation')));
+    if (current.mediaLabel) label.append(node('span', '', current.mediaLabel));
     if (isVideo) label.append(node('span', '', 'Audio + video'));
     const player = node(isVideo ? 'video' : 'audio', isVideo ? 'recorded-demo' : 'recorded-audio');
     ui.recording = player; ui.pendingSeek = null; ui.buffering = false; ui.playRequest = 0; ui.wantsPlay = false;
@@ -373,7 +373,8 @@
       cancelAnimationFrame(animation); animation = 0; update();
       showRecordingError('The recording could not be loaded.');
     });
-    frame.append(label, player);
+    if (label.childElementCount) frame.append(label);
+    frame.append(player);
     if (!isVideo && current.waveform) {
       const wave = node('div', 'scene-waveform');
       const image = node('img'); image.src = current.waveform; image.width = 720; image.height = 104;
@@ -457,7 +458,6 @@
     tabs.forEach(tab => { const active = tab.dataset.demo === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; if (active && focus) tab.focus(); });
     panel.setAttribute('aria-labelledby', 'tab-' + id);
     document.getElementById('demo-model').textContent = current.model;
-    document.getElementById('demo-format').textContent = current.format || (current.type === 'audio' ? 'Recorded audio demo' : current.type === 'video' ? 'Recorded video demo' : 'Animated research example');
     document.getElementById('demo-category').textContent = current.category;
     document.getElementById('demo-title').textContent = current.title;
     document.getElementById('demo-summary').textContent = current.summary;
