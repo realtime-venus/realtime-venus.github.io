@@ -83,6 +83,8 @@ nav a:last-child { color: var(--accent); }
 .button:hover { background: var(--wash); border-color: var(--accent); }
 .button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 .button.primary:hover { background: var(--brand-hover); }
+.apk-download { border-color: var(--blue-line); color: var(--accent); }
+.beta-badge { display: inline-flex; align-items: center; padding: .15rem .5rem; border-radius: 999px; background: var(--blue-soft); color: var(--accent); font-size: var(--type-caption); font-weight: 600; line-height: 1.4; }
 .play-icon { font-size: .7rem; }
 .launch-authors { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: .3rem .6rem; margin-top: 1.7rem; color: var(--muted); font-size: var(--type-small); }
 .launch-authors > span { display: inline-block; }

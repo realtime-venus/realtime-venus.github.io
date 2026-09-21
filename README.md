@@ -4,6 +4,8 @@ Project website for **Realtime-Venus: A full-duplex interaction system with asyn
 
 **Public website:** https://realtime-venus.github.io/
 
+**Android beta:** [Realtime-Venus-0918.apk](https://github.com/realtime-venus/realtime-venus.github.io/releases/download/android-beta-0918/Realtime-Venus-0918.apk) (21.2 MB). The homepage download button links to this GitHub prerelease asset.
+
 ## Website content
 
 A demo-led presentation of proactive audio–visual interaction, full-duplex speech and asynchronous delegation. The first card plays a real stereo road-trip conversation with synchronized dialogue and a waveform measured from its two audio channels. The second card plays a recorded microwave scene with synchronized user and model dialogue and English subtitles. The third card pairs Shanghai landmark footage with the supplied user and assistant speech clips to illustrate a delegated flight search. All three scenes share a compact two-column layout: media and playback controls on the left, synchronized conversation and model state on the right. The conversation scrolls independently and follows new messages only while the visitor is near the bottom; scene notes and the complete transcript expand on demand. Narrow screens stack the same player and conversation. Visitors can play, pause, scrub, choose 1×/1.5×/2× playback, jump to chapters, watch a key moment, replay, and expand the complete transcript. All three players provide volume controls and use their native media clocks to drive the interface; both videos also provide captions and full-screen controls. Research highlights, expandable system and evaluation details, and a copyable citation follow the demos.
