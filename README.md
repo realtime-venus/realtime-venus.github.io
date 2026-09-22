@@ -24,7 +24,7 @@ Dialogue appears as complete messages at the aligned events; no word-level speec
 
 ## Other team work
 
-The closing gallery presents three supplied recordings: gaze-based museum guidance, menu recognition, and ring-controlled capture. The source files come from the supplied Realtime-Venus directory and its ring-demo subfolder; model-repository sample clips are excluded. Descriptive English labels identify the video content, without claiming that all examples use the Realtime-Venus model.
+The closing gallery presents four supplied recordings in a two-column grid (one column on mobile): gaze-based museum guidance, menu recognition, ring-controlled payment, and ring-controlled capture. Both ring videos and their posters use the newly supplied redacted September 21 versions; their masks, complete timelines, and original audio are preserved. Descriptive English labels identify the video content, without claiming that all examples use the Realtime-Venus model.
 
 Each card initially contains only a lazy-loaded poster and a normal video link. The native player is created on the visitor’s first click, so gallery recordings do not download during initial page loading. Full recordings retain their audio, use browser-compatible H.264/AAC and fast-start metadata, and play through the existing range-capable GitHub media origin on the Sites mirror. Only one recording plays at a time across the gallery and main demos. Playback also pauses when the page is hidden, and a failed player exposes a retry action and direct video link.
 
