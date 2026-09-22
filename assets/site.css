@@ -384,7 +384,6 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .team-work-play[hidden], .team-work-video[hidden], .team-work-error[hidden] { display: none; }
 .team-work-caption { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; align-items: baseline; gap: .6rem .75rem; min-height: 5.25rem; padding: 1.25rem; border-top: 1px solid var(--line); }
 .team-work-caption .team-work-title { margin: 0; font-size: var(--type-lead); font-weight: 500; line-height: 1.5; letter-spacing: -.015em; }
-.team-work-title--accent { color: var(--accent); }
 .team-work-duration { padding: .1rem .45rem; border-radius: 5px; background: var(--wash); color: var(--muted); font-size: var(--type-small); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .team-work-description { grid-column: 1 / -1; color: var(--muted); font-size: var(--type-body); line-height: 1.6; }
 .team-work-error { padding: 0 1.25rem 1rem; color: var(--muted); font-size: var(--type-small); }
