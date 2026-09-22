@@ -365,7 +365,7 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .team-work-section { padding-block: var(--section-space); border-top: 1px solid var(--line); }
 .team-work-heading { margin-bottom: 2rem; }
 .team-work-heading h2 { font-weight: 500; }
-.team-work-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); }
+.team-work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); }
 .team-work-card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--paper); }
 .team-work-media { position: relative; flex: none; aspect-ratio: 16 / 9; min-height: 0; background: var(--wash); }
 .team-work-play, .team-work-video { position: absolute; inset: 0; }
