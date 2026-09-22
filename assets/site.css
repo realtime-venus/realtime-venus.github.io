@@ -363,37 +363,50 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .footer-copyright { color: var(--ink); font-weight: 500; }
 
 .team-work-section { padding-block: var(--section-space); border-top: 1px solid var(--line); }
-.team-work-heading { margin-bottom: 2rem; }
+.team-work-heading { margin-bottom: 2.5rem; }
 .team-work-heading h2 { font-weight: 500; }
-.team-work-group + .team-work-group { margin-top: 2.75rem; }
-.team-work-group-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; color: var(--accent); font-size: var(--type-title); font-weight: 500; letter-spacing: -.015em; }
-.team-work-group-title::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.team-work-group { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 2rem; padding-block: 2rem; border-top: 1px solid var(--line); }
+.team-work-group-heading { padding-top: .25rem; }
+.team-work-group-index { display: block; margin-bottom: .75rem; color: var(--accent); font-size: var(--type-small); font-weight: 500; font-variant-numeric: tabular-nums; }
+.team-work-group-title { color: var(--ink); font-size: var(--type-title); font-weight: 500; letter-spacing: -.015em; }
 .team-work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); }
-.team-work-card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--paper); }
-.team-work-grid--phones { max-width: 760px; margin-inline: auto; }
-.team-work-card--phone { width: 100%; max-width: 320px; justify-self: center; }
-.team-work-card--phone .team-work-media { aspect-ratio: 9 / 20; }
+.team-work-card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--paper); box-shadow: 0 3px 12px #172b4605; transition: border-color .2s, box-shadow .2s; }
+.team-work-card:hover, .team-work-card:focus-within { border-color: var(--blue-line); box-shadow: 0 6px 22px #172b460b; }
+.team-work-card--phone .team-work-media { height: 26rem; aspect-ratio: auto; background: linear-gradient(145deg, var(--blue-soft), var(--wash)); }
+.team-work-card--phone .team-work-play img { padding-block: 1rem; }
 .team-work-media { position: relative; flex: none; aspect-ratio: 16 / 9; min-height: 0; background: var(--wash); }
 .team-work-play, .team-work-video { position: absolute; inset: 0; }
 .team-work-play { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; text-decoration: none; }
 .team-work-play img, .team-work-video { display: block; width: 100%; height: 100%; object-fit: contain; }
-.team-work-play-label { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 44px; padding: .5rem 1rem; border: 1px solid var(--blue-line); border-radius: 999px; background: var(--paper); color: var(--accent); font-size: var(--type-small); font-weight: 500; white-space: nowrap; box-shadow: 0 2px 12px #172b4614; }
-.team-work-play:hover .team-work-play-label { background: var(--blue-soft); border-color: var(--accent); }
+.team-work-play-label { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 44px; padding: .5rem 1.1rem; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent); color: var(--paper); font-size: var(--type-small); font-weight: 500; white-space: nowrap; box-shadow: 0 3px 14px #0958d926; transition: background .2s, border-color .2s; }
+.team-work-play:hover .team-work-play-label { background: var(--brand-hover); border-color: var(--brand-hover); }
 .team-work-play:focus-visible { outline-offset: -5px; }
 .team-work-play[hidden], .team-work-video[hidden], .team-work-error[hidden] { display: none; }
-.team-work-caption { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; min-height: 5rem; padding: 1rem; }
-.team-work-caption .team-work-title { margin: 0; font-size: var(--type-body); font-weight: 500; line-height: 1.5; letter-spacing: 0; }
-.team-work-duration { flex-shrink: 0; color: var(--muted); font-size: var(--type-small); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.team-work-caption { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; align-items: baseline; gap: .6rem .75rem; min-height: 5.25rem; padding: 1.25rem; border-top: 1px solid var(--line); }
+.team-work-caption .team-work-title { margin: 0; font-size: var(--type-lead); font-weight: 500; line-height: 1.5; letter-spacing: -.015em; }
+.team-work-title--accent { color: var(--accent); }
+.team-work-duration { padding: .1rem .45rem; border-radius: 5px; background: var(--wash); color: var(--muted); font-size: var(--type-small); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.team-work-description { grid-column: 1 / -1; color: var(--muted); font-size: var(--type-body); line-height: 1.6; }
 .team-work-error { padding: 0 1.25rem 1rem; color: var(--muted); font-size: var(--type-small); }
 .team-work-error a { color: var(--accent); }
-.team-contact { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.team-contact { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-top: .5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
 .team-contact h3 { font-size: var(--type-title); font-weight: 500; }
 .team-contact-links { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; }
 .team-contact-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent); font-size: var(--type-body); overflow-wrap: anywhere; }
 
-@media (max-width: 760px) {
+@media (max-width: 1000px) {
+  .team-work-group { grid-template-columns: 1fr; gap: 1.25rem; }
+  .team-work-group-heading { display: flex; align-items: baseline; gap: .85rem; padding-top: 0; }
+  .team-work-group-index { margin-bottom: 0; }
+}
+@media (max-width: 640px) {
+  .team-work-heading { margin-bottom: 1.75rem; }
+  .team-work-group { padding-block: 1.5rem; }
   .team-work-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .team-work-caption { min-height: 0; }
+  .team-work-card--phone .team-work-media { height: clamp(22rem, 105vw, 28rem); }
+}
+@media (max-width: 760px) {
   .team-contact { align-items: flex-start; flex-direction: column; }
   .team-contact-links { flex-direction: column; gap: .25rem; max-width: 100%; }
 }
