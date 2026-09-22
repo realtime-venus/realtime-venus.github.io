@@ -10,7 +10,7 @@
   cards.forEach(card => {
     const link = card.querySelector('.team-work-play');
     const error = card.querySelector('.team-work-error');
-    const title = card.querySelector('h3').textContent;
+    const title = card.querySelector('.team-work-title').textContent;
     const source = mediaURL(link.getAttribute('href'));
     card.querySelector('.team-work-error a').href = source;
     let player;

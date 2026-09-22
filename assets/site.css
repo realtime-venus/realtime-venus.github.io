@@ -365,8 +365,14 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .team-work-section { padding-block: var(--section-space); border-top: 1px solid var(--line); }
 .team-work-heading { margin-bottom: 2rem; }
 .team-work-heading h2 { font-weight: 500; }
+.team-work-group + .team-work-group { margin-top: 2.75rem; }
+.team-work-group-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; color: var(--accent); font-size: var(--type-title); font-weight: 500; letter-spacing: -.015em; }
+.team-work-group-title::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .team-work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); }
 .team-work-card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--paper); }
+.team-work-grid--phones { max-width: 760px; margin-inline: auto; }
+.team-work-card--phone { width: 100%; max-width: 320px; justify-self: center; }
+.team-work-card--phone .team-work-media { aspect-ratio: 9 / 20; }
 .team-work-media { position: relative; flex: none; aspect-ratio: 16 / 9; min-height: 0; background: var(--wash); }
 .team-work-play, .team-work-video { position: absolute; inset: 0; }
 .team-work-play { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; text-decoration: none; }
@@ -376,7 +382,7 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
 .team-work-play:focus-visible { outline-offset: -5px; }
 .team-work-play[hidden], .team-work-video[hidden], .team-work-error[hidden] { display: none; }
 .team-work-caption { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; min-height: 5rem; padding: 1rem; }
-.team-work-caption h3 { font-size: var(--type-body); font-weight: 500; line-height: 1.5; letter-spacing: 0; }
+.team-work-caption .team-work-title { margin: 0; font-size: var(--type-body); font-weight: 500; line-height: 1.5; letter-spacing: 0; }
 .team-work-duration { flex-shrink: 0; color: var(--muted); font-size: var(--type-small); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .team-work-error { padding: 0 1.25rem 1rem; color: var(--muted); font-size: var(--type-small); }
 .team-work-error a { color: var(--accent); }
